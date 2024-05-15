@@ -8,7 +8,7 @@ spring:
         size: 10
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/
+    url: jdbc:mysql://localhost:3306/klimaralley
     username: root
     password: # no password
   jpa:
@@ -26,3 +26,10 @@ spring:
     multipart:
       max-file-size: 40MB
       max-request-size: 40MB
+
+springdoc:
+  api-docs:
+    path: /api/api-docs
+  swagger-ui:
+    path: /api/docs
+    operationsSorter: method

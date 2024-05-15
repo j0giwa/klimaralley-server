@@ -1,0 +1,1 @@
+package de.thowl.klimaralley.server.core.expections.wasserarm;
