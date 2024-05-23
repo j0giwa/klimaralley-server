@@ -40,7 +40,10 @@ public class WasserAPI {
 	 */
 	@Operation(summary = "Healthcheck")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Can be used to check if api is up", content = @Content),
+		@ApiResponse(
+			responseCode = "200",
+			description = "Can be used to check if api is up",
+			content = @Content),
 	})
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ResponseEntity<Object> healthCheck() {
@@ -59,8 +62,11 @@ public class WasserAPI {
 	 */
 	@Operation(summary = "Retrieves all shop items from the Database")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "501", description = "Wasserarmsatt shopitems as json", content = @Content),	
-	})
+		@ApiResponse(
+			responseCode = "501", 
+			description = "Wasserarmsatt shopitems as json", 
+			content = @Content),
+		})
 	@RequestMapping(value = "/items", method = RequestMethod.GET)
 	public ResponseEntity<Object> getAllItems() {
 		log.info("entering getAllItems (GET-Method: /water/items)");
@@ -69,7 +75,7 @@ public class WasserAPI {
 	}
 
 	/**
-	 * Retrieves a {@link Eater} to serve
+	 * Retrieves a {@link Eater} to serve.
 	 *
 	 * curl -X 'GET' 'http://localhost:8080/water/eater'
 	 * 
@@ -77,13 +83,19 @@ public class WasserAPI {
 	 */
 	@Operation(summary = "Retrieves a Eater to serve")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "501", description = "Wasserarmsatt Eaater information as json", content = @Content),
-	})
+		@ApiResponse(
+			responseCode = "200",
+			description = "Wasserarmsatt Eaater information as json",
+			content = @Content),
+		})
 	@RequestMapping(value = "/eater", method = RequestMethod.GET)
 	public ResponseEntity<Object> getEater() {
-		log.info("entering getAllItems (GET-Method: /water/eater)");
+		
+		Eater eater;
 
-		Eater eater = this.wassersvc.generateEater();
+		log.info("entering getAllItems (GET-Method: /water/eater)");
+		
+		eater = this.wassersvc.generateEater();
 
 		return ResponseEntity.status(HttpStatus.OK).body(eater);
 	}
@@ -96,7 +108,10 @@ public class WasserAPI {
 	 */
 	@Operation(summary = "Retrieves game score based on items")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "501", description = "Wasserarmsatt score", content = @Content),
+		@ApiResponse(
+			responseCode = "501",
+			description = "Wasserarmsatt score",
+			content = @Content),
 	})
 	@RequestMapping(value = "/score", method = RequestMethod.GET)
 	public ResponseEntity<Object> getScore() {
