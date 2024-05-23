@@ -9,8 +9,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
-import de.thowl.klimaralley.server.storage.entities.wasserarm.Item;
-import de.thowl.klimaralley.server.storage.entities.wasserarm.ItemType;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItemType;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,18 +25,18 @@ class TestEaterRepository {
 	@Test
 	void testStore() {
 		Eater eater;
-		Item prefItem;
+		WasserarmShopItem prefItem;
 
 		log.debug("entering testStore");
 
-		prefItem = new Item();
+		prefItem = new WasserarmShopItem();
 		prefItem.setName("Apple");
-		prefItem.setType(ItemType.FRUIT);
+		prefItem.setType(WasserarmShopItemType.FRUIT);
 		prefItem.setWater(2);
 		prefItem.setPrice(2);
 
-		eater = new Eater(2, "Heimdall", EaterDiet.NORMAL, new Item[]{prefItem});
-		assertTrue(eaters.store(eater), "Eater was not stored");
+		eater = new Eater(2, "Heimdall", EaterDiet.NORMAL, new WasserarmShopItem[]{prefItem});
+		assertTrue(eaters.save(eater), "Eater was not stored");
 	}
 
 

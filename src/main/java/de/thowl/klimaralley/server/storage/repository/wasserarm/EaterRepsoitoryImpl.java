@@ -20,7 +20,7 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
         }
 
         @Override
-        public boolean store(Eater eater) {
+        public boolean save(Eater eater) {
                 log.debug("entering store");
                 this.eaters.add(eater);
                 return true;

@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import de.thowl.klimaralley.server.storage.entities.wasserarm.Item;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 
 @Repository
-public interface ItemRepository extends CrudRepository<Item, Long> {
+public interface ItemRepository extends CrudRepository<WasserarmShopItem, Long> {
 	
-	public List<Item> findAll();
+	public List<WasserarmShopItem> findAll();
 }

@@ -1,11 +1,14 @@
 package de.thowl.klimaralley.server.web.wasserarm;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/water")
 @Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API")
 public class WasserAPI {
+
+
+	@Autowired
+	private WasserarmService wassersvc;
 
 	/**
 	 * Healthcheck method to 'ping' the API
@@ -59,6 +66,26 @@ public class WasserAPI {
 		log.info("entering getAllItems (GET-Method: /water/items)");
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+	}
+
+	/**
+	 * Retrieves a {@link Eater} to serve
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/water/eater'
+	 * 
+	 * @return repsonse (code {@code 200}) with all shop items as JSON
+	 */
+	@Operation(summary = "Retrieves a Eater to serve")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "501", description = "Wasserarmsatt Eaater information as json", content = @Content),
+	})
+	@RequestMapping(value = "/eater", method = RequestMethod.GET)
+	public ResponseEntity<Object> getEater() {
+		log.info("entering getAllItems (GET-Method: /water/eater)");
+
+		Eater eater = this.wassersvc.generateEater();
+
+		return ResponseEntity.status(HttpStatus.OK).body(eater);
 	}
 
 	/**

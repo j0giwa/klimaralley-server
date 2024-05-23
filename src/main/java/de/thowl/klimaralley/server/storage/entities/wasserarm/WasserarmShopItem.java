@@ -6,17 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "Items")
-@eRequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+public class WasserarmShopItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Item {
 	
 	@NotNull
 	@NonNull
-	private ItemType type;
+	private WasserarmShopItemType type;
 
 	@NotNull
 	private int water;

@@ -1,6 +1,6 @@
 package de.thowl.klimaralley.server.storage.entities.wasserarm;
 
-public enum ItemType {
+public enum WasserarmShopItemType {
 	FRUIT,
 	VEGETABLE,
 	MEAT;

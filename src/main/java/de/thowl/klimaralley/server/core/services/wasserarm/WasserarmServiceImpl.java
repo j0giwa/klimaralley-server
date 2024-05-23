@@ -2,30 +2,49 @@ package de.thowl.klimaralley.server.core.services.wasserarm;
 
 import java.util.List;
 
-import de.thowl.klimaralley.server.storage.entities.wasserarm.Item;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.github.javafaker.Faker;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * {@inheritDoc}
+ * 
+ * @author Jonas Schwind
+ * @version 0.3.0
+ */
 @Slf4j
 @Service
 public class WasserarmServiceImpl implements WasserarmService {
 
-	private String getRandomName(){
+	@Autowired
+	private EaterRepsoitory eaters;
 
-		String[] names;
-		String name;
+	public List<WasserarmShopItem> getAll() {
+		// TODO: Implement
+		throw new UnsupportedOperationException("Unimplemented method 'getEater'");
+	}
+
+	private String generateRandomName(boolean generateSurname){
+
+		Faker faker;
 
 		log.debug("entering generateName");
 
-		return name;
-	}
+		faker = new Faker();
+		
+		if (generateSurname) {
+			return faker.name().firstName();
+		} 
 
-	public List<Item> getAll() {
-		// TODO: Implement
-		return null;	
+		return faker.name().name();
 	}
 
         public Eater generateEater() {
@@ -35,15 +54,21 @@ public class WasserarmServiceImpl implements WasserarmService {
 		log.debug("entering GenerateEater");
 		
 		eater = new Eater();
-		eater.setName(getRandomName());
+		eater.setName(generateRandomName(false));
+		eater.setDiet(EaterDiet.NORMAL);
+		eater.setPreferernces(null);
+
+		log.info("storing Eater");
+		this.eaters.save(eater);
 
 		return eater;
 
 	}
 
-        public Eater getEater() {
+	@Override
+	public Eater getEater(long id) {
 		// TODO: Implement
-		return null;	
+		throw new UnsupportedOperationException("Unimplemented method 'getEater'");
 	}
 
 
