@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 /**
  * RESTful API of the Wasserarm satt game.
  * This API is a stub and subject to change.
@@ -26,7 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 public class WasserAPI {
 
 	/**
-	 * Healthcheck method to ping the API
+	 * Healthcheck method to 'ping' the API
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/water/'
 	 *
 	 * @return status code {@code 200}
 	 */
@@ -43,6 +44,8 @@ public class WasserAPI {
 
 	/**
 	 * Get all shop items from the Database
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/water/items'
 	 * 
 	 * @return status code {@code 501} // TODO: Delete
 	 * @return repsonse (code {@code 200}) with all shop items as JSON
@@ -68,11 +71,10 @@ public class WasserAPI {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "501", description = "Wasserarmsatt score", content = @Content),
 	})
-	@RequestMapping(value = "/get/score", method = RequestMethod.GET)
+	@RequestMapping(value = "/score", method = RequestMethod.GET)
 	public ResponseEntity<Object> getScore() {
 		log.info("entering getScore (GET-Method: /water/score)");
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
 	}
-
 }
