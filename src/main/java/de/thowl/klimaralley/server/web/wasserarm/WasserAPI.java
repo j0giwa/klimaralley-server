@@ -16,7 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 
 
 /**
- * API is a stub and subject to change.
+ * RESTful API of the Wasserarm satt game.
+ * This API is a stub and subject to change.
  */
 @Slf4j
 @RestController
@@ -25,20 +26,26 @@ import lombok.extern.slf4j.Slf4j;
 public class WasserAPI {
 
 	/**
-	 *  
+	 * Healthcheck method to ping the API
+	 *
+	 * @return status code {@code 200}
 	 */
 	@Operation(summary = "Healthcheck")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Can be used to check if api is up", content = @Content),
 	})
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseEntity<Object> test() {
+	public ResponseEntity<Object> healthCheck() {
 		log.info("entering getTask (GET-Method: /water/get)");
-		return ResponseEntity.status(HttpStatus.OK).body("hello world");
+		// TODO: Stub
+		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 
 	/**
-	 *  
+	 * Get all shop items from the Database
+	 * 
+	 * @return status code {@code 501} // TODO: Delete
+	 * @return repsonse (code {@code 200}) with all shop items as JSON
 	 */
 	@Operation(summary = "Retrieves all shop items from the Database")
 	@ApiResponses(value = {
@@ -47,32 +54,24 @@ public class WasserAPI {
 	@RequestMapping(value = "/items", method = RequestMethod.GET)
 	public ResponseEntity<Object> getAllItems() {
 		log.info("entering getAllItems (GET-Method: /water/items)");
+		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
 	}
 
 	/**
+	 * Calculates score bases on given items
 	 *  
+	 * @return status code {@code 501} // TODO: Delete
+	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
-	@Operation(summary = "Retrieves all shop items from the Database")
+	@Operation(summary = "Retrieves game score based on items")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "501", description = "Wasserarmsatt score", content = @Content),
 	})
 	@RequestMapping(value = "/get/score", method = RequestMethod.GET)
 	public ResponseEntity<Object> getScore() {
 		log.info("entering getScore (GET-Method: /water/score)");
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
-	}
-
-	/**
-	 *  
-	 */
-	@Operation(summary = "Retrieves all shop items from the Database")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "501", description = "Submit cart items", content = @Content),
-	})
-	@RequestMapping(value = "/items", method = RequestMethod.POST)
-	public ResponseEntity<Object> setCartItems() {
-		log.info("entering setCartItems (POST-Method: /water/items)");
+		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
 	}
 
