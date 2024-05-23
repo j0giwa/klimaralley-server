@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API")
 public class WasserAPI {
 
-
 	@Autowired
 	private WasserarmService wassersvc;
 
@@ -94,7 +93,7 @@ public class WasserAPI {
 		Eater eater;
 
 		log.info("entering getAllItems (GET-Method: /water/eater)");
-		
+
 		eater = this.wassersvc.generateEater();
 
 		return ResponseEntity.status(HttpStatus.OK).body(eater);
