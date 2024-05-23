@@ -54,6 +54,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 		log.debug("entering GenerateEater");
 		
 		eater = new Eater();
+		eater.setId(eaters.countAll());
 		eater.setName(generateRandomName(false));
 		eater.setDiet(EaterDiet.NORMAL);
 		eater.setPreferernces(null);

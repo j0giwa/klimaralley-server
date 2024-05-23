@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
-import de.thowl.klimaralley.server.core.expections.wasserarm.NoEaterException;
+import de.thowl.klimaralley.server.core.expections.wasserarm.NoSuchEaterException;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,14 +34,20 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
         }
 
         @Override
-        public Eater findById(long id) throws NoEaterException {
+        public Eater findById(long id) throws NoSuchEaterException {
                 log.debug("entering findById");
                 for (Eater e: this.eaters) {
                         if (e.getId() == id){
                                 return e;
                         }
                 }
-		throw new NoEaterException("this Eater with does not exist");
+		throw new NoSuchEaterException("this Eater with does not exist");
+        }
+
+        @Override
+        public long countAll() {
+                log.debug("entering countAll");
+                return this.eaters.size();
         }
 
 }
