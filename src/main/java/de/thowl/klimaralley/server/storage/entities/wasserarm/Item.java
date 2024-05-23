@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Entity
 @Table(name = "Items")
-@RequiredArgsConstructor
+@eRequiredArgsConstructor
 @NoArgsConstructor
 public class Item {
 

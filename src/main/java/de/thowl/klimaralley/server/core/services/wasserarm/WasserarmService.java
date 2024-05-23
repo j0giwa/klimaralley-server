@@ -8,5 +8,8 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 public interface WasserarmService {
 
 	public List<Item> getAll();
+
+        public Eater generateEater();
+
         public Eater getEater();
 }

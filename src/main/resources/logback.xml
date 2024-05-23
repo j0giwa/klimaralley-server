@@ -3,7 +3,7 @@
 <configuration scan="true" scanPeriod="3 seconds">
 	<contextName>layouts</contextName>
 
-	<property name="HOME_LOG" value="log/server.log"/>
+	<property name="HOME_LOG" value="log/server.log"/>log
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
