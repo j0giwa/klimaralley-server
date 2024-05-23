@@ -13,7 +13,7 @@ import lombok.NonNull;
 
 @Data
 @Entity
-@Table(name = "Items")
+@Table(name = "WasserarmShopItems")
 @AllArgsConstructor
 @NoArgsConstructor
 public class WasserarmShopItem {
