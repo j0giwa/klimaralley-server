@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
-import de.thowl.klimaralley.server.core.expections.auth.NullUserException;
+import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
 import de.thowl.klimaralley.server.storage.repository.auth.SessionRepository;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
@@ -214,14 +214,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 */
 	@Override
 	public void updateUser(long id, String firstname, String lastname, String username,
-			String email, String password) throws NullUserException {
+			String email, String password) throws NoSuchUserException {
 
 		User user;
 
 		log.debug("entering updateUser");
 
 		user = users.findById(id).orElseThrow(
-				() -> new NullUserException("User not found"));
+				() -> new NoSuchUserException("User not found"));
 
 		// update the user object in database
 		user.setUsername(username);

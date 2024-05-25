@@ -2,7 +2,7 @@ package de.thowl.klimaralley.server.core.services.auth;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
-import de.thowl.klimaralley.server.core.expections.auth.NullUserException;
+import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
 import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
 import de.thowl.klimaralley.server.storage.entities.auth.Session;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
@@ -99,11 +99,11 @@ public interface AuthenticationService {
 	 * @param email     The new E-Mail address of the {@link User}.
 	 * @param password  The new password of the {@link User}.
 	 * 
-	 * @throws NullUserException when the given id does not belong to an existing
+	 * @throws NoSuchUserException when the given id does not belong to an existing
 	 *                           {@link User}.
 	 */
 	public void updateUser(long id, String firstname, String lastname, String username, String email, String password)
-			throws NullUserException;
+			throws NoSuchUserException;
 
 	/**
 	 * Performs a login action and stores an active {@link Session} in the Database.
