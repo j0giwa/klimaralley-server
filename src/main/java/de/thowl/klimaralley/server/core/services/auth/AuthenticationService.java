@@ -35,7 +35,7 @@ public interface AuthenticationService {
 	 * <li>at least one upper case English letter</li>
 	 * <li>at least one lower case English letter</li>
 	 * <li>at least one number</li>
-	 * <li>at least ne special character</li>
+	 * <li>at least one special character</li>
 	 * </ul>
 	 *
 	 * @param password Password to validate
