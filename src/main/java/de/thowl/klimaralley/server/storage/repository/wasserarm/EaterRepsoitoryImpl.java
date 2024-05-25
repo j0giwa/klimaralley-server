@@ -50,4 +50,11 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
                 return this.eaters.size();
         }
 
+        @Override
+        public boolean clear() {
+                log.debug("entering clear");
+                this.eaters.clear();
+                return true;
+        }
+
 }

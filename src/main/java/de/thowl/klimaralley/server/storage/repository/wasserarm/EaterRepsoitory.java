@@ -41,4 +41,10 @@ public interface EaterRepsoitory {
          * @return amount of stored eaters
          */
         public long countAll();
+
+        /**
+         * 
+         * @return {@code true} if everthying was deleted.
+         */
+        public boolean clear();
 }

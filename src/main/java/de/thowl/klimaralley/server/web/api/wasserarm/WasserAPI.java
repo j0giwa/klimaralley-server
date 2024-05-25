@@ -1,4 +1,4 @@
-package de.thowl.klimaralley.server.web.wasserarm;
+package de.thowl.klimaralley.server.web.api.wasserarm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
