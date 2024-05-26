@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
+import de.thowl.klimaralley.server.core.services.auth.JWTtokenizer;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
+import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,14 +48,16 @@ public class AuthAPI {
 	 */
 	@Operation(summary = "login")
 	@ApiResponses(value = {
-		@ApiResponse( responseCode = "200", description = "loginToken", content = @Content),
+		@ApiResponse(responseCode = "200", description = "JSON Web Token", content = @Content),
+		@ApiResponse(responseCode="401",description="Invalid credentials",content=@Content),
+		@ApiResponse(responseCode = "500", description = "JWT Token generation failed", content = @Content)
 	})
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<Object> doLogin(LoginSchema form) {
 
 		User user;
 		AccessToken token;
-		String email, password;
+		String email, password, jwt;
 
 		log.info("entering doLogin (POST-Method: /login)");
 
@@ -65,18 +70,19 @@ public class AuthAPI {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 		}
 
-		user = this.users.findByEmail(form.getEmail());
+		try {
+            		jwt = JWTtokenizer.generateToken(token);
+        	} catch (JwtException e) {
+            		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token generation failed");
+        	}
 
-		// TODO: Constuckt jwt 
-
-		// TODO: change me
-		return ResponseEntity.status(HttpStatus.OK).body("Dummy Token");
+		return ResponseEntity.status(HttpStatus.OK).body(jwt);
 	}
 
 	/**
 	 * Performs a logout action
 	 */
-	@Operation(summary = "login")
+	@Operation(summary = "logout")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "logged out", content = @Content),
 	})

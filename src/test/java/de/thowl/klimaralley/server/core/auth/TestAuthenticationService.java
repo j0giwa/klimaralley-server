@@ -58,7 +58,7 @@ class TestAuthenticationService {
 	}
 
 	/**
-	 * Testing if a login whith valid credentials returns an accesstoken
+	 * Testing if a login whith valid credentials returns an accesstoken.
 	 */
 	@Test
 	void testLogin() {
