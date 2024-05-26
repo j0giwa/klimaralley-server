@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
+import de.thowl.klimaralley.server.storage.repository.wasserarm.ItemRepository;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
@@ -27,9 +28,11 @@ public class WasserarmServiceImpl implements WasserarmService {
 	@Autowired
 	private EaterRepsoitory eaters;
 
+	@Autowired
+	private ItemRepository wasserarmShopItems;
+
 	public List<WasserarmShopItem> getAll() {
-		// TODO: Implement
-		throw new UnsupportedOperationException("Unimplemented method 'getEater'");
+		return wasserarmShopItems.findAll();
 	}
 
 	private String generateRandomName(boolean generateSurname){

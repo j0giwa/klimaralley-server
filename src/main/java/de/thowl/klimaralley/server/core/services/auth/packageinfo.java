@@ -1,1 +1,0 @@
-package de.thowl.klimaralley.server.core.services.auth;

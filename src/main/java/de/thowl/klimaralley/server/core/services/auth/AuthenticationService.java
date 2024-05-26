@@ -3,8 +3,6 @@ package de.thowl.klimaralley.server.core.services.auth;
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
-import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
-import de.thowl.klimaralley.server.storage.entities.auth.Session;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 /**
@@ -46,38 +44,6 @@ public interface AuthenticationService {
 	public boolean validatePassword(String password);
 
 	/**
-	 * Validates the Users Session
-	 * <p>
-	 * Checks if the given {@link AccessToken} belongs to a session with this
-	 * {@link AccessToken}.
-	 *
-	 * @param token    The {@link AccessToken} to check.
-	 * @param username The name of the {@link User} to check.
-	 *
-	 * @return {@code true} if the conditions match,
-	 *         {@code false} if something does not match
-	 */
-	public boolean validateSession(AccessToken token, String username);
-
-	/**
-	 * Resets the session expiry time.
-	 * 
-	 * A valid Session expires after 30 Minutes.
-	 * Running this resets the timer.
-	 * 
-	 * @param session The session to refresh
-	 */
-	public void refreshSession(AccessToken token);
-
-	/**
-	 * Gets an actice {@link User} by his {@link AccessToken}
-	 * 
-	 * @param token The {@link AccessToken}.
-	 * @return The {@link User} having the {@link AccessToken}.
-	 */
-	public User getUserbySession(AccessToken token);
-
-	/**
 	 * Registers a new user
 	 * 
 	 * @param firstname The First Name of the user
@@ -117,13 +83,6 @@ public interface AuthenticationService {
 	 *
 	 * @throws {@link InvalidCredentialsException} when credentials are invalid.
 	 */
-	public AccessToken login(String email, String password) throws InvalidCredentialsException;
-
-	/**
-	 * Removes an active {@link Session} from the Database.
-	 * 
-	 * @param token The token of the session to remove.
-	 */
-	public void logout(String token);
+	public String login(String email, String password) throws InvalidCredentialsException;
 
 }

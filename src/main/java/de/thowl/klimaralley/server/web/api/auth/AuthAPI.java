@@ -6,23 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
-import de.thowl.klimaralley.server.core.services.auth.JWTtokenizer;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
-import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
-import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +45,12 @@ public class AuthAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "JSON Web Token", content = @Content),
 		@ApiResponse(responseCode="401",description="Invalid credentials",content=@Content),
-		@ApiResponse(responseCode = "500", description = "JWT Token generation failed", content = @Content)
 	})
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<Object> doLogin(LoginSchema form) {
 
 		User user;
-		AccessToken token;
-		String email, password, jwt;
+		String email, password, token;
 
 		log.info("entering doLogin (POST-Method: /login)");
 
@@ -70,30 +63,7 @@ public class AuthAPI {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
 		}
 
-		try {
-            		jwt = JWTtokenizer.generateToken(token);
-        	} catch (JwtException e) {
-            		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token generation failed");
-        	}
-
-		return ResponseEntity.status(HttpStatus.OK).body(jwt);
-	}
-
-	/**
-	 * Performs a logout action
-	 */
-	@Operation(summary = "logout")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "logged out", content = @Content),
-	})
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ResponseEntity<Object> doLogout(@SessionAttribute("token") AccessToken token) {
-
-		log.info("entering doLogin (GET-Method: /logout)");
-
-		authsvc.logout(token.getUsid());
-
-		return ResponseEntity.status(HttpStatus.OK).body("logged out");
+		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
 
 	/**

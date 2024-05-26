@@ -16,7 +16,6 @@ import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
-import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,7 +62,7 @@ class TestAuthenticationService {
 	@Test
 	void testLogin() {
 
-		AccessToken token;
+		String token;
 
 		log.info("entering Integration test testLogin");
 
@@ -76,8 +75,6 @@ class TestAuthenticationService {
 		}
 
 		assertNotNull(token, "Token should not be NULL");
-		assertNotNull(token.getUsid(), "Session ID should not be NULL");
-		assertEquals(1, token.getUserId(), "Wrong UserID in session token, expected = 1");
 	}
 
 	/**

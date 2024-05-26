@@ -9,8 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 
-import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
-
+import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 /**
  * @author Jonas Schwind
@@ -27,11 +26,11 @@ public class JWTtokenizer {
 	 * @param accessToken
 	 * @return jwt token
 	 */
-	public static String generateToken(AccessToken accessToken) {
+	public static String generateToken(User user) {
 		return Jwts.builder()
-			.setSubject(String.valueOf(accessToken.getUserId()))
-			.claim("usid", accessToken.getUsid())
-			.claim("lastActive", accessToken.getLastActive())
+			.setSubject(String.valueOf(user.getId()))
+			.claim("email", user.getEmail())
+			.claim("username", user.getUsername())
 			.setIssuedAt(new Date())
 			.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 			.signWith(key)

@@ -1,22 +1,15 @@
 package de.thowl.klimaralley.server.core.services.auth;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
-import de.thowl.klimaralley.server.storage.repository.auth.SessionRepository;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
-import de.thowl.klimaralley.server.storage.entities.auth.AccessToken;
-import de.thowl.klimaralley.server.storage.entities.auth.Session;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,32 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Autowired
 	private UserRepository users;
 
-	@Autowired
-	private SessionRepository sessions;
-
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCRYPT_COST);
-
-	/**
-	 * Deletes rouge(incative) sessions
-	 * 
-	 * Runs once every minute
-	 */
-	@Scheduled(fixedRate = 60000)
-	public void cleanupExpiredSessions() {
-
-		Date now;
-		List<Session> expired;
-
-		log.debug("entering cleanupExpiredSessions");
-
-		now = new Date();
-		expired = sessions.findByExpiresAtBefore(now);
-
-		if (!expired.isEmpty()) {
-			log.info("Found {} expired sessions. Deleting...", expired.size());
-			sessions.deleteAll(expired);
-		}
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -107,80 +75,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		log.debug("validatePassword(password: {}) returned: {}", password, result);
 		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean validateSession(AccessToken token, String username) {
-
-		Session session;
-		User user;
-		boolean result;
-
-		log.debug("entering validateSession");
-
-		if (token == null) {
-			log.error("token was null");
-			return false;
-		}
-
-		user = users.findByUsername(username);
-		session = sessions.findByAuthToken(token.getUsid());
-		if (session == null) {
-			log.error("a session could not be found");
-			return false;
-		}
-
-		user = users.findByUsername(username);
-		if (user == null) {
-			log.error("user: {} could not be found", username);
-			return false;
-		}
-
-		result = user.getId() == session.getUserId();
-		log.debug("validateSession(token: {}, username:{}) returned: {}", token, username, result);
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void refreshSession(AccessToken token) {
-
-		Session session;
-		Calendar calendar;
-		Date expiryTime;
-
-		session = sessions.findByAuthToken(token.getUsid());
-		calendar = Calendar.getInstance();
-		calendar.add(Calendar.HOUR, 2);
-		expiryTime = calendar.getTime();
-
-		session.setExpiresAt(expiryTime);
-
-		this.sessions.save(session);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public User getUserbySession(AccessToken token) {
-
-		String usid;
-		Session session;
-		User user;
-
-		log.debug("entering getUserbySession");
-
-		usid = token.getUsid();
-		session = this.sessions.findByAuthToken(usid);
-		user = this.users.findById(session.getUserId()).get();
-
-		return user;
 	}
 
 	/**
@@ -263,43 +157,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	}
 
 	/**
-	 * Creates a {@link Session} for the given {@link User}.
-	 *
-	 * @param user The {@link User} to create a {@link Session} for.
-	 * @return The {@link User}s {@link AccessToken}
-	 */
-	private AccessToken createSession(User user) {
-
-		AccessToken token;
-		UUID uuid;
-		Calendar calendar;
-		Date expiryTime;
-
-		log.debug("entering createSession");
-
-		calendar = Calendar.getInstance();
-		calendar.add(Calendar.HOUR, 2);
-		expiryTime = calendar.getTime();
-
-		// Todo: Refactor AccessToken
-		token = new AccessToken();
-		uuid = UUID.randomUUID();
-		token.setUsid(uuid.toString());
-		token.setUserId(user.getId());
-		token.setLastActive(new Date());
-
-		this.sessions.save(new Session(token.getUsid(), user, expiryTime));
-
-		log.debug("createSession returned: {}", token.toString());
-
-		return token;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public AccessToken login(String email, String password) throws InvalidCredentialsException {
+	public String login(String email, String password) throws InvalidCredentialsException {
 
 		User user;
 
@@ -320,28 +181,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		log.info("login attempt for user with email: {}", email);
 		if (checkPassword(user, password)) {
 			log.info("Password matched, creating user session");
-			return createSession(user);
+			return JWTtokenizer.generateToken(user);
 		}
 
 		throw new InvalidCredentialsException("Wrong Password");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void logout(String token) {
-
-		Session session;
-
-		log.debug("entering logout");
-
-		session = this.sessions.findByAuthToken(token);
-
-		log.info("user with id: {} logged out", session.getUserId());
-		log.debug("deleting session: {} from Database", session.toString());
-
-		this.sessions.delete(session);
 	}
 
 }

@@ -69,8 +69,7 @@ public class WasserAPI {
 	@RequestMapping(value = "/items", method = RequestMethod.GET)
 	public ResponseEntity<Object> getAllItems() {
 		log.info("entering getAllItems (GET-Method: /water/items)");
-		// TODO: Stub
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(wassersvc.getAll());
 	}
 
 	/**
