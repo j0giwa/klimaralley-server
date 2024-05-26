@@ -17,8 +17,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
-import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,9 +32,6 @@ public class AuthAPI {
 
 	@Autowired
 	private AuthenticationService authsvc;
-	
-	@Autowired
-	private UserRepository users;
 
 	/**
 	 * Performs a login action
@@ -49,7 +44,6 @@ public class AuthAPI {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<Object> doLogin(LoginSchema form) {
 
-		User user;
 		String email, password, token;
 
 		log.info("entering doLogin (POST-Method: /login)");

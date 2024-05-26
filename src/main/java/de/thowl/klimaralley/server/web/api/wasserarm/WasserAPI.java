@@ -5,16 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
+import de.thowl.klimaralley.server.core.utils.auth.JWTtokenizer;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -62,14 +66,14 @@ public class WasserAPI {
 	@Operation(summary = "Retrieves all shop items from the Database")
 	@ApiResponses(value = {
 		@ApiResponse(
-			responseCode = "501", 
+			responseCode = "200", 
 			description = "Wasserarmsatt shopitems as json", 
 			content = @Content),
 		})
 	@RequestMapping(value = "/items", method = RequestMethod.GET)
 	public ResponseEntity<Object> getAllItems() {
 		log.info("entering getAllItems (GET-Method: /water/items)");
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(wassersvc.getAll());
+		return ResponseEntity.status(HttpStatus.OK).body(wassersvc.getAll());
 	}
 
 	/**
@@ -81,11 +85,9 @@ public class WasserAPI {
 	 */
 	@Operation(summary = "Retrieves a Eater to serve")
 	@ApiResponses(value = {
-		@ApiResponse(
-			responseCode = "200",
-			description = "Wasserarmsatt Eaater information as json",
-			content = @Content),
-		})
+			@ApiResponse(responseCode = "200",description = "Wasserarmsatt Eaater information as json", content = @Content),
+		}
+	)
 	@RequestMapping(value = "/eater", method = RequestMethod.GET)
 	public ResponseEntity<Object> getEater() {
 		
@@ -101,19 +103,27 @@ public class WasserAPI {
 	/**
 	 * Calculates score bases on given items
 	 *  
-	 * @return status code {@code 501} // TODO: Delete
 	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
-	@Operation(summary = "Retrieves game score based on items")
+    	@Operation(summary = "Retrieves game score based on items")
 	@ApiResponses(value = {
-		@ApiResponse(
-			responseCode = "501",
-			description = "Wasserarmsatt score",
-			content = @Content),
+		@ApiResponse(responseCode = "501", description = "Wasserarmsatt score", content = @Content)
 	})
 	@RequestMapping(value = "/score", method = RequestMethod.GET)
-	public ResponseEntity<Object> getScore() {
+	public ResponseEntity<Object> getScore(@Parameter(description = "JWT token") @RequestParam(required = false) String token) {
+
+		Claims claims;
+
 		log.info("entering getScore (GET-Method: /water/score)");
+
+		claims = JWTtokenizer.parseToken(token);
+
+		// enter scoreboard: TODO: stub
+		if (claims != null) {
+			String userId = claims.getSubject();
+			log.info("Authenticated user ID: " + userId);
+		}
+
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
 	}

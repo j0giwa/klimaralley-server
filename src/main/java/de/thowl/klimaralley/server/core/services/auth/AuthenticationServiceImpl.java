@@ -3,12 +3,12 @@ package de.thowl.klimaralley.server.core.services.auth;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
+import de.thowl.klimaralley.server.core.utils.auth.JWTtokenizer;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +21,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @Slf4j
 @Service
-@EnableScheduling
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final int BCRYPT_COST = 15;
+	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	private UserRepository users;
-
-	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCRYPT_COST);
+	
+	public AuthenticationServiceImpl() {
+		this.encoder = new BCryptPasswordEncoder(BCRYPT_COST);
+	}
 
 	/**
 	 * {@inheritDoc}

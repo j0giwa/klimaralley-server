@@ -1,4 +1,4 @@
-package de.thowl.klimaralley.server.core.services.auth;
+package de.thowl.klimaralley.server.core.utils.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -11,21 +11,11 @@ import java.util.Date;
 
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 
-/**
- * @author Jonas Schwind
- * @version 1.0.0 
- */
 public class JWTtokenizer {
 
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	private static final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
 
-	/**
-	 * Generates a jwt token from an Accesstoken in the db.
-	 * 
-	 * @param accessToken
-	 * @return jwt token
-	 */
 	public static String generateToken(User user) {
 		return Jwts.builder()
 			.setSubject(String.valueOf(user.getId()))
@@ -38,6 +28,11 @@ public class JWTtokenizer {
 	}
 
 	public static Claims parseToken(String token) {
+		// Check if the token is null or empty
+		if (token == null || token.isEmpty()) {
+			return null;
+		}
+
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(key)
@@ -45,7 +40,9 @@ public class JWTtokenizer {
 				.parseClaimsJws(token)
 				.getBody();
 		} catch (JwtException e) {
+			// Handle other JwtExceptions (e.g., expired token, invalid signature)
 			throw new RuntimeException("Invalid token", e);
 		}
 	}
+
 }
