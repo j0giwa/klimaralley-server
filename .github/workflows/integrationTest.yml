@@ -53,7 +53,7 @@ jobs:
       run: java -jar target/klimaralley.server-*.jar &
 
     - name: Wait for application to start
-      run: sleep 30
+      run: sleep 10
 
     - name: Run integration tests
       run: |
