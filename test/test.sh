@@ -22,6 +22,8 @@ test_water_eater_endpoint() {
 			-H 'accept: application/json')
 	EXPECTED_PATTERN='^\{"id":[0-9]+,"name":"[A-Za-z\s]+","diet":"[A-Z]+","preferences":\[(\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},)*\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\}\]\}$'
 
+	echo $RESPONSE
+
 	if ! [[ "$RESPONSE" =~ $EXPECTED_PATTERN ]]; then
   		echo "Response does not match the expected pattern"
   		exit 1
