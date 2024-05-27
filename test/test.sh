@@ -1,13 +1,12 @@
 #!/bin/bash
 
 # Integration test script for the backend
-# regex was generated via ChatGPT
 # curl commands were taken from the swagger documentaion
 
 test_water_items_endpoint(){
 
 	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' -H 'accept: application/json')
-	EXPECTED_PATTERN='/\[\s*(\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÅÄÖÜåäöü\s]+",\s*"type":\s*"[A-Z_]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*,?\s*)*\]'
+	EXPECTED_PATTERN='\[\s*(\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÅÄÖÜåäöü\s]+",\s*"type":\s*"[A-Z_]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*,?\s*)*\]'
 
 	if ! [[ "$RESPONSE" =~ $EXPECTED_PATTERN ]]; then
   		echo "Response does not match the expected pattern"
