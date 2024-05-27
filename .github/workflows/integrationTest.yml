@@ -46,6 +46,14 @@ jobs:
         java-version: '21'
         architecture: 'x64'
 
+    - name: Install Python and dependencies
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install pytest
+      run: pip install pytest
+
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
 
@@ -57,8 +65,7 @@ jobs:
 
     - name: Run integration tests
       run: |
-        chmod +x ./test/test.sh
-        ./test/test.sh
+        pytest ./test/test.py
 
     - name: Stop the Spring Boot application
       run: pkill -f your-spring-boot-app.jar
