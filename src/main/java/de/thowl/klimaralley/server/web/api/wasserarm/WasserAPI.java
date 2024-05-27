@@ -66,10 +66,9 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", 
 			description = "Wasserarmsatt shop items", 
-			content = @Content(mediaType = "application/json",
-				array = @ArraySchema(schema = @Schema(implementation = WasserarmShopItem.class)))),
+			content = @Content(array = @ArraySchema(schema = @Schema(implementation = WasserarmShopItem.class)))),
 	})
-	@RequestMapping(value = "/items", method = RequestMethod.GET)
+	@RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getAllItems() {
 		log.info("entering getAllItems (GET-Method: /water/items)");
 		return ResponseEntity.status(HttpStatus.OK).body(wassersvc.getAll());
@@ -86,10 +85,9 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "Wasserarmsatt Eater information",
-			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = Eater.class))),
+			content = @Content(schema = @Schema(implementation = Eater.class))),
 	})
-	@RequestMapping(value = "/eater", method = RequestMethod.GET)
+	@RequestMapping(value = "/eater", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getEater() {
 		
 		Eater eater;

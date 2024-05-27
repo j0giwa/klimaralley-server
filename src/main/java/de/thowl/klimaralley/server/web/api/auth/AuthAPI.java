@@ -47,11 +47,10 @@ public class AuthAPI {
 	@Operation(summary = "login")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Successful operation",
-			content = @Content(mediaType = "text/plain",
-				schema = @Schema(implementation = String.class))),
+			content = @Content(schema = @Schema(implementation = String.class))),
 		@ApiResponse(responseCode = "401", description = "Invalid credentials"),
 	})
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "text/plain")
 	public ResponseEntity<Object> doLogin(LoginSchema schema) {
 
 		String email, password, token;
@@ -85,7 +84,7 @@ public class AuthAPI {
 		@ApiResponse(responseCode = "400", description = "Invalid credentials"),
 		@ApiResponse(responseCode = "500", description = "User already exists"),
 	})
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
 	public ResponseEntity<Object> doRegister(RegisterSchema form) {
 
 		log.info("entering doRegister (POST-Method: /register)");
