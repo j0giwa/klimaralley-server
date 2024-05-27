@@ -70,7 +70,7 @@ test_auth_endpoints() {
 
 test_water_endpoints() {
 	echo "Testing water endpoints..."
-	test_water_eater_endpoint
+	test_water_items_endpoint
 	test_water_eater_endpoint
 	echo "water endpoints tested successfully!"
 }
