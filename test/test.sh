@@ -8,6 +8,8 @@ test_water_items_endpoint(){
 	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' -H 'accept: application/json')
 	EXPECTED_PATTERN='\[\s*(\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÅÄÖÜåäöü\s]+",\s*"type":\s*"[A-Z_]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*,?\s*)*\]'
 
+	echo $RESPONSE
+
 	if ! [[ "$RESPONSE" =~ $EXPECTED_PATTERN ]]; then
   		echo "Response does not match the expected pattern"
   		exit 1
@@ -20,7 +22,7 @@ test_water_eater_endpoint() {
 
 	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/eater' \
 			-H 'accept: application/json')
-	EXPECTED_PATTERN='^\{"id":[0-9]+,"name":"[A-Za-z\s]+","diet":"[A-Z]+","preferences":\[(\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},)*\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\}\]\}$'
+	EXPECTED_PATTERN='\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÅÄÖÜåäöü\s]+",\s*"diet":\s*"[A-Z_\s]+",\s*"preferernces":\s*\[\s*(\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÅÄÖÜåäöü\s]+",\s*"type":\s*"[A-Z_]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*,?\s*)*\]\s*}'
 
 	echo $RESPONSE
 
@@ -60,14 +62,6 @@ test_auth_login_endpoint() {
 	echo "Test /water/items passed!"
 }
 
-# Function to test auth endpoints
-test_auth_endpoints() {
-	echo "Testing auth endpoints..."
-	test_auth_register_endpoint
-	test_auth_login_endpoint
-	echo "auth endpoints tested successfully!"
-}
-
 test_water_endpoints() {
 	echo "Testing water endpoints..."
 	test_water_items_endpoint
@@ -75,7 +69,13 @@ test_water_endpoints() {
 	echo "water endpoints tested successfully!"
 }
 
-# Call the test functions
+test_auth_endpoints() {
+	echo "Testing auth endpoints..."
+	test_auth_register_endpoint
+	test_auth_login_endpoint
+	echo "auth endpoints tested successfully!"
+}
+
 test_water_endpoints
 test_auth_endpoints
 
