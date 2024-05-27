@@ -22,6 +22,7 @@ def test_water_eater_endpoint():
     
     assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
+@pytest.mark.dependency()
 def test_auth_register_endpoint():
     url = 'http://localhost:8080/auth/register'
     headers = {'accept': 'text/plain'}
@@ -39,6 +40,7 @@ def test_auth_register_endpoint():
     
     assert response_text == "User Registered", "Response does not match the expected pattern"
 
+@pytest.mark.dependency(depends=['test_auth_register_endpoint'])
 def test_auth_login_endpoint():
     url = 'http://localhost:8080/auth/login'
     headers = {'accept': 'text/plain'}
@@ -52,14 +54,4 @@ def test_auth_login_endpoint():
     expected = r"^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)"  # valid JWT
     
     assert re.match(expected, response_text), "Response does not match the expected pattern"
-
-@pytest.mark.water
-def test_all_water_endpoints():
-    test_water_items_endpoint()
-    test_water_eater_endpoint()
-
-@pytest.mark.auth
-def test_all_auth_endpoints():
-    test_auth_register_endpoint()
-    test_auth_login_endpoint()
 
