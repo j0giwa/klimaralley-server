@@ -123,8 +123,6 @@ public class WasserAPI {
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
-		log.info(token);
-
 		claims = JWTtokenizer.parseToken(token);
 
 		// enter scoreboard: TODO: stub

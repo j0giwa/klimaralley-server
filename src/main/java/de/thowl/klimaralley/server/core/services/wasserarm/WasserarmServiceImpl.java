@@ -1,6 +1,8 @@
 package de.thowl.klimaralley.server.core.services.wasserarm;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
@@ -24,6 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class WasserarmServiceImpl implements WasserarmService {
+
+	final int PREFS_SIZE = 3;
+
+	// Not real word values
+	final int VEGETARIAN_CHANCE = 15;
+	final int VEGAN_CHANCE = 10;
+	final int FRUTATRIAN_CHANCE = 2;
 
 	@Autowired
 	private EaterRepsoitory eaters;
@@ -50,6 +59,55 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return faker.name().name();
 	}
 
+	private EaterDiet generateDiet(){
+
+		EaterDiet diet;
+		long unixtime;
+		int val;
+		Random rng;
+
+		log.debug("entering generateDiet");
+
+		unixtime = System.currentTimeMillis() / 1000L;
+		rng = new Random(unixtime);
+		val = rng.nextInt(101);
+
+		log.info("{}",val);
+
+		if (val <= FRUTATRIAN_CHANCE) {
+			diet = EaterDiet.FRUTARIAN;
+		} else if (val <= VEGAN_CHANCE) {
+			diet = EaterDiet.VEGAN;
+		} else if (val <= VEGETARIAN_CHANCE) {
+			diet = EaterDiet.VEGETARIAN;
+		} else {
+			diet = EaterDiet.NORMAL;
+		}
+
+		return diet;
+	}
+
+	private WasserarmShopItem[] generatePreferences() {
+
+		List<WasserarmShopItem> items;
+		WasserarmShopItem[] prefs;
+		long unixtime;
+		Random rng;
+
+		log.debug("entering GenerateEater");
+		
+		unixtime = System.currentTimeMillis() / 1000L;
+		rng = new Random(unixtime);
+		items = wasserarmShopItems.findAll();
+		prefs = new WasserarmShopItem[PREFS_SIZE];
+
+		for(int i = 0; i <= PREFS_SIZE - 1; i++) {
+			prefs[i] = items.get(rng.nextInt(items.size()));
+		}
+
+		return prefs;
+	} 
+
         public Eater generateEater() {
 
 		Eater eater;
@@ -59,14 +117,13 @@ public class WasserarmServiceImpl implements WasserarmService {
 		eater = new Eater();
 		eater.setId(eaters.countAll());
 		eater.setName(generateRandomName(false));
-		eater.setDiet(EaterDiet.NORMAL);
-		eater.setPreferernces(null);
+		eater.setDiet(generateDiet());
+		eater.setPreferernces(generatePreferences());
 
 		log.info("storing Eater");
 		this.eaters.save(eater);
 
 		return eater;
-
 	}
 
 	@Override
