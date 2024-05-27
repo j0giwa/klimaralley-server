@@ -3,9 +3,9 @@ package de.thowl.klimaralley.server.web.api.wasserarm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
@@ -14,7 +14,6 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -53,7 +52,6 @@ public class WasserAPI {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ResponseEntity<Object> healthCheck() {
 		log.info("entering getTask (GET-Method: /water/get)");
-		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 
@@ -105,6 +103,11 @@ public class WasserAPI {
 
 	/**
 	 * Calculates score bases on given items
+	 *
+	 * curl -X 'POST' \
+	 *   'localhost:8080/water/score' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: <TOKEN>'
 	 *  
 	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
@@ -113,11 +116,14 @@ public class WasserAPI {
 		@ApiResponse(responseCode = "501", description = "Wasserarmsatt score")
 	})
 	@RequestMapping(value = "/score", method = RequestMethod.POST)
-	public ResponseEntity<Object> getScore(@Parameter(description = "JWT token") @RequestParam(required = false) String token) {
+	// TODO: Swagger Documentaion wrong
+	public ResponseEntity<Object> getScore(@RequestHeader(name = "Authorization", required = false) String token) {
 
 		Claims claims;
 
 		log.info("entering getScore (GET-Method: /water/score)");
+
+		log.info(token);
 
 		claims = JWTtokenizer.parseToken(token);
 
