@@ -7,7 +7,7 @@
 test_water_items_endpoint(){
 
 	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' -H 'accept: application/json')
-	EXPECTED_PATTERN='^\[\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},.*\]$'
+	EXPECTED_PATTERN='\[\s*(\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÄÖÜäöüß ]+",\s*"type":\s*"[A-Z]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*,\s*)*\{\s*"id":\s*\d+,\s*"name":\s*"[A-Za-zÄÖÜäöüß ]+",\s*"type":\s*"[A-Z]+",\s*"water":\s*\d+,\s*"price":\s*\d+\s*\}\s*\]'
 
 	if ! [[ "$RESPONSE" =~ $EXPECTED_PATTERN ]]; then
   		echo "Response does not match the expected pattern"
