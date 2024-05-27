@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
-import de.thowl.klimaralley.server.core.utils.auth.JWTtokenizer;
+import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 import lombok.extern.slf4j.Slf4j;
@@ -180,7 +180,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		log.info("login attempt for user with email: {}", email);
 		if (checkPassword(user, password)) {
 			log.info("Password matched, creating user session");
-			return JWTtokenizer.generateToken(user);
+			return Tokenizer.generateToken(user);
 		}
 
 		throw new InvalidCredentialsException("Wrong Password");

@@ -17,7 +17,7 @@ import de.thowl.klimaralley.server.storage.entities.auth.User;
  * @author Jonas Schwind
  * @version 1.2.0
  */
-public class JWTtokenizer {
+public class Tokenizer {
 
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	private static final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
-import de.thowl.klimaralley.server.core.utils.auth.JWTtokenizer;
+import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import io.jsonwebtoken.Claims;
@@ -121,7 +121,7 @@ public class WasserAPI {
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
-		claims = JWTtokenizer.parseToken(JWTtokenizer.getBearer(token));
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
 		// enter scoreboard: TODO: stub
 		if (claims != null) {
