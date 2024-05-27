@@ -22,7 +22,6 @@ public class Tokenizer {
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	private static final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
 
-
 	/**
 	 * Generates a JWT token for a {@link User}.
 	 *
@@ -74,9 +73,17 @@ public class Tokenizer {
 
 		String token;
 		
+		if (bearer == null) {
+			return null;
+		}
+
 		token = null;
 		if (bearer.startsWith("Bearer")) {
-			token = bearer.split(" ")[1];
+			String[] slices = bearer.split(" ");
+
+			if (slices.length == 2) {
+				token = slices[1];
+			}
 		}
 		
 		return token;

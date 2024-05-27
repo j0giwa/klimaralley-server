@@ -128,18 +128,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	}
 
 	/**
-	 * Checks if the input password matches the {@link User}s password stored in the
-	 * Database.
-	 *
-	 * @param user     The {@link User} whose Password should be checked against
-	 * @param password The input Password that should be checked
-	 *
-	 * @return {@code true} if the Password matched, {@code false} if the Password
-	 *         did not match
+	 * {@inheritDoc}
 	 */
-	private boolean checkPassword(User user, String password) {
+	@Override
+	public boolean checkPassword(String bcrypt, String password) {
 
-		String bHash;
 		boolean result;
 
 		log.debug("entering checkPassword");
@@ -147,11 +140,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (null == password || password.isBlank())
 			return false;
 
-		bHash = user.getPassword();
 		log.debug("Comparing Form-password with BCrypt-hash");
-		result = encoder.matches(password, bHash);
+		result = encoder.matches(password, bcrypt);
 
-		log.debug("checkPassword(user: {}, password: {}) returned: {}", user.toString(), password, result);
+		log.debug("checkPassword(BCrypt: {}, password: {}) returned: {}", bcrypt, password, result);
 		return result;
 	}
 
@@ -178,7 +170,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 		log.info("login attempt for user with email: {}", email);
-		if (checkPassword(user, password)) {
+
+		if (checkPassword(user.getPassword(), password)) {
 			log.info("Password matched, creating user session");
 			return Tokenizer.generateToken(user);
 		}

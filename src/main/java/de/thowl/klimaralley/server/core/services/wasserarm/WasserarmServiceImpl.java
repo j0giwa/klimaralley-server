@@ -69,7 +69,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 *
 	 * @return a diet
 	 */
-	private EaterDiet generateDiet(){
+	private EaterDiet generateDiet() {
 
 		EaterDiet diet;
 		long unixtime;

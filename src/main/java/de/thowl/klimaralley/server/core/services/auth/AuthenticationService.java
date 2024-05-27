@@ -44,6 +44,17 @@ public interface AuthenticationService {
 	public boolean validatePassword(String password);
 
 	/**
+	 * Checks if the input password matches a BCrypt hash
+	 *
+	 * @param bcrypt   The BCrypt hash to check against
+	 * @param password The input Password that should be checked
+	 *
+	 * @return {@code true} if the Password matched, {@code false} if the Password
+	 *         did not match
+	 */
+	public boolean checkPassword(String bcrypt, String password);
+
+	/**
 	 * Registers a new user
 	 * 
 	 * @param firstname The First Name of the user
