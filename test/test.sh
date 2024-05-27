@@ -4,13 +4,9 @@
 # regex was generated via ChatGPT
 # curl commands were taken from the swagger documentaion
 
-# Set the server base URL
-BASE_URL="http://localhost:8080"
-
 test_water_items_endpoint(){
 
-	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' \
-			-H 'accept: application/json')
+	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' -H 'accept: application/json')
 	EXPECTED_PATTERN='^\[\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},.*\]$'
 
 	if ! [[ "$RESPONSE" =~ $EXPECTED_PATTERN ]]; then
