@@ -33,7 +33,7 @@ class TestEaterRepository {
 		Eater eater;
 		WasserarmShopItem prefItem;
 
-		log.debug("Setting up an EaterRepsoitory test");
+		log.info("Setting up an EaterRepsoitory test");
 
         	prefItem = new WasserarmShopItem();
         	prefItem.setName("Melon");
@@ -93,7 +93,7 @@ class TestEaterRepository {
 
 	@AfterEach
 	public void tearDown() {
-		log.debug("Cleaning up an EaterRepsoitory test");
+		log.info("Cleaning up an EaterRepsoitory test");
 		eaters.clear();
     	}
 }

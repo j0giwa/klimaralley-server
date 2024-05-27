@@ -1,8 +1,12 @@
 package de.thowl.klimaralley.server.core.auth;
 
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
@@ -14,13 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
 
-
-public class TestTokennizer {
+@Slf4j
+@SpringBootTest
+@ActiveProfiles("test")
+public class TestTokenizer {
 	
 	private User user;
 
 	@BeforeEach
 	void setUp() {
+
+		log.info("Setting up an Tokenizer test");
+
 		user = new User();
 		user.setId(1);
 		user.setFirstname("test");
@@ -34,6 +43,8 @@ public class TestTokennizer {
 	void testGenerateToken() {
 		String token;
 		Claims claims;
+		
+		log.info("entering test GenerateToken");
 
 		token = Tokenizer.generateToken(user);
 		assertNotNull(token);
@@ -47,7 +58,11 @@ public class TestTokennizer {
 
 	@Test
 	void testParseTokenInvalid() {
-		String invalidToken = "invalidToken";
+		String invalidToken;
+
+		log.info("entering test parseTokenInvalid");
+
+		invalidToken = "invalidToken";
 
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
 			Tokenizer.parseToken(invalidToken);
@@ -59,6 +74,8 @@ public class TestTokennizer {
 	@Test
 	void parseTokenIsEmpty() {
 		Claims claims;
+
+		log.info("entering test parseTokenIsEmpty");
 
 		claims = Tokenizer.parseToken("");
 		assertNull(claims);
@@ -73,7 +90,11 @@ public class TestTokennizer {
 	 */
 	@Test
 	void getBearerIsValid() {
-		String token = Tokenizer.getBearer("Bearer validToken");
+		String token;
+		
+		log.info("entering test getBearerIsValid");
+
+		token = Tokenizer.getBearer("Bearer validToken");
 		assertEquals("validToken", token);
 	}
 
@@ -84,6 +105,8 @@ public class TestTokennizer {
 	@Test
 	void getBearerBearerInvalid() {
 		String token;
+
+		log.info("entering test getBearerIsInvalid");
 
 		token = Tokenizer.getBearer("BearerInvalidToken");
 		assertNull(token);
@@ -97,6 +120,7 @@ public class TestTokennizer {
 
 	@AfterEach
 	void cleanup() {
+		log.info("Cleaning up an Tokenizer test");
 		user = null;
 	}
 }
