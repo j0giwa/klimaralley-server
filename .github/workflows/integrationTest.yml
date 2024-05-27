@@ -68,6 +68,3 @@ jobs:
     - name: Run integration tests
       run: |
         pytest ./test/test.py
-
-    - name: Stop the Spring Boot application
-      run: pkill -f your-spring-boot-app.jar
