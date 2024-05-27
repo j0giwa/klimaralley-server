@@ -10,7 +10,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     services:
       mysql:
         image: mysql:5.7
@@ -22,6 +21,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+    - name: Create empty schema
+      run: |
+        mysql -h 127.0.0.1 -P 3306 -u root --password= klimaralley << EOF
+        CREATE DATABASE IF NOT EXISTS klimaralley;
+        USE klimaralley;
+        EOF
+
     - name: Checkout code
       uses: actions/checkout@v3
 
