@@ -1,7 +1,5 @@
 package de.thowl.klimaralley.server.core.services.auth;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,8 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (this.users.findByUsername(username) != null)
 			throw new DuplicateUserException("A User with this Username already exists");
 
-		usr = new User(firstname, lastname, username, email, encoder.encode(password),
-				UUID.randomUUID().toString());
+		usr = new User(firstname, lastname, username, email, encoder.encode(password));
 
 		log.info("registering user {} with {}", username, email);
 		this.users.save(usr);

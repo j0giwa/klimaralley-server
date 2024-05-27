@@ -1,6 +1,5 @@
 package de.thowl.klimaralley.server.core.services.wasserarm;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +10,6 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch;
 import org.springframework.stereotype.Service;
 
 import com.github.javafaker.Faker;
