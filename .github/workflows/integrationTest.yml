@@ -50,7 +50,7 @@ jobs:
       run: mvn -B package -DskipTests --file pom.xml
 
     - name: Start the Spring Boot application
-      run: java -jar target/your-spring-boot-app.jar &
+      run: java -jar target/klimaralley.server-*.jar &
 
     - name: Wait for application to start
       run: sleep 30
