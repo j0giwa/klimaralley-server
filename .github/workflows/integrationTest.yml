@@ -8,7 +8,15 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build-and-test:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 8
+          - os: ubuntu-latest
+            java: 21
     runs-on: ubuntu-latest
     services:
       mysql:
