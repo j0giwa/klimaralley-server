@@ -104,10 +104,11 @@ public class WasserAPI {
 	/**
 	 * Calculates score bases on given items
 	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
 	 * curl -X 'POST' \
 	 *   'localhost:8080/water/score' \
 	 *   -H 'accept text/plain'
-	 *   -H 'Authorization: <TOKEN>'
+	 *   -H 'Authorization: Bearer <TOKEN>'
 	 *  
 	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
@@ -115,15 +116,14 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "501", description = "Wasserarmsatt score")
 	})
-	@RequestMapping(value = "/score", method = RequestMethod.POST)
-	// TODO: Swagger Documentaion wrong
+	@RequestMapping(value = "/score", method = RequestMethod.POST, produces = "text/plain")
 	public ResponseEntity<Object> getScore(@RequestHeader(name = "Authorization", required = false) String token) {
 
 		Claims claims;
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
-		claims = JWTtokenizer.parseToken(token);
+		claims = JWTtokenizer.parseToken(JWTtokenizer.getBearer(token));
 
 		// enter scoreboard: TODO: stub
 		if (claims != null) {

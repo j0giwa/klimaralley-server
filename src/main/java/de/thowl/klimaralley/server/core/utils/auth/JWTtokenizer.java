@@ -11,6 +11,12 @@ import java.util.Date;
 
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 
+/**
+ * Generate and parese JWT
+ * 
+ * @author Jonas Schwind
+ * @version 1.2.0
+ */
 public class JWTtokenizer {
 
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -56,6 +62,24 @@ public class JWTtokenizer {
 			// Handle other JwtExceptions (e.g., expired token, invalid signature)
 			throw new RuntimeException("Invalid token", e);
 		}
+	}
+
+	/**
+	 * Extracts JWT-Token from Bearer-Token.
+	 * 
+	 * @param bearer Bearer-Token
+	 * @return JWT-Token or {@code null} if there was no Bearer-Token.
+	 */
+	public static String getBearer(String bearer) {
+
+		String token;
+		
+		token = null;
+		if (bearer.startsWith("Bearer")) {
+			token = bearer.split(" ")[1];
+		}
+		
+		return token;
 	}
 
 }

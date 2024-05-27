@@ -146,7 +146,6 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return eater;
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */ 
