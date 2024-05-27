@@ -16,6 +16,14 @@ public class JWTtokenizer {
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	private static final long EXPIRATION_TIME = 86400000; // 1 day in milliseconds
 
+
+	/**
+	 * Generates a JWT token for a {@link User}.
+	 *
+	 * @param user The {@link User} that shall be associated with the Token.
+	 *
+	 * @return a JWT token
+	 */ 
 	public static String generateToken(User user) {
 		return Jwts.builder()
 			.setSubject(String.valueOf(user.getId()))
@@ -27,6 +35,11 @@ public class JWTtokenizer {
 			.compact();
 	}
 
+	/**
+	 * Parses a JWT token and extracts its claims.
+	 *
+	 * @return The token's claims 
+	 */
 	public static Claims parseToken(String token) {
 		// Check if the token is null or empty
 		if (token == null || token.isEmpty()) {

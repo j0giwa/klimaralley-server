@@ -13,6 +13,11 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
  */
 public interface WasserarmService {
 
+	/**
+	 * Retrieves {@link WasserarmShopItem}s from the Database
+	 *
+         * @return a list of {@link WasserarmShopItem}
+	 */
 	public List<WasserarmShopItem> getAll();
 
         /**

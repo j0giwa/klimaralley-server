@@ -11,6 +11,7 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch;
 import org.springframework.stereotype.Service;
 
 import com.github.javafaker.Faker;
@@ -44,6 +45,12 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return wasserarmShopItems.findAll();
 	}
 
+	/**
+	 *  Genenrates a random name for the {@link Eater}
+	 *
+	 *  @param generateSurname wether or not a surname is included
+	 *  @return Name
+	 */ 
 	private String generateRandomName(boolean generateSurname){
 
 		Faker faker;
@@ -59,6 +66,11 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return faker.name().name();
 	}
 
+	/**
+	 * Determinaes a Diet (Normal, Vegetarian, Vegean or Fruatarian) for the {@link Eater}.
+	 *
+	 * @return a diet
+	 */
 	private EaterDiet generateDiet(){
 
 		EaterDiet diet;
@@ -87,6 +99,12 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return diet;
 	}
 
+
+	/**
+	 * Generates an Array of {@link WasserarmShopItem}s that the {@link Eater} prefers.
+	 *
+	 * @return Array of prefered {@link WasserarmShopItem}s 
+	 */
 	private WasserarmShopItem[] generatePreferences() {
 
 		List<WasserarmShopItem> items;
@@ -108,6 +126,10 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return prefs;
 	} 
 
+	/**
+	 * {@inheritDoc}
+	 */ 
+	@Override
         public Eater generateEater() {
 
 		Eater eater;
@@ -126,11 +148,14 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return eater;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */ 
 	@Override
 	public Eater getEater(long id) {
 		// TODO: Implement
 		throw new UnsupportedOperationException("Unimplemented method 'getEater'");
 	}
-
 
 }

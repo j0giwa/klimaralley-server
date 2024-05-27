@@ -79,7 +79,7 @@ public interface AuthenticationService {
 	 * @param email    The E-Mail address of the user
 	 * @param password The password of the user
 	 *
-	 * @return permit A38
+	 * @return permit A38 (JWT token)
 	 *
 	 * @throws {@link InvalidCredentialsException} when credentials are invalid.
 	 */

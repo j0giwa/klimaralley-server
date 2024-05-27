@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * RESTful API of the Wasserarm satt game.
+ * RESTful API of the Wasserarmsatt game.
  *
  * This API is a stub and subject to change.
  *

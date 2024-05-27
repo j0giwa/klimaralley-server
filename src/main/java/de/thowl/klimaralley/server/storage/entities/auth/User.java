@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A Representation of a User (player).
+ *
+ * @author Jonas Schwind
+ * @version 1.0.0
+ */
 @Data
 @Entity
 @Table(name = "Users")
@@ -41,9 +47,4 @@ public class User {
 	@NotNull
 	@NonNull
 	private String password;
-
-	@NotNull
-	@NonNull
-	private String apiToken;
-
 }

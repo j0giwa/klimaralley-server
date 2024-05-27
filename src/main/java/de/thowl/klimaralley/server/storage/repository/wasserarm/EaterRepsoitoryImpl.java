@@ -19,13 +19,18 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
                 this.eaters = new ArrayList<>();
         }
 
+	/**
+	 * {@inheritDoc}
+	 */ 
         @Override
         public boolean save(Eater eater) {
                 log.debug("entering store");
                 this.eaters.add(eater);
                 return true;
         }
-
+	/**
+	 * {@inheritDoc}
+	 */ 
         @Override
         public boolean delete(Eater eater) {
                 log.debug("entering store");
@@ -33,6 +38,9 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
                 return true;
         }
 
+	/**
+	 * {@inheritDoc}
+	 */ 
         @Override
         public Eater findById(long id) throws NoSuchEaterException {
                 log.debug("entering findById");
@@ -44,12 +52,18 @@ public class EaterRepsoitoryImpl implements EaterRepsoitory {
 		throw new NoSuchEaterException("this Eater with does not exist");
         }
 
+	/**
+	 * {@inheritDoc}
+	 */ 
         @Override
         public long countAll() {
                 log.debug("entering countAll");
                 return this.eaters.size();
         }
 
+	/**
+	 * {@inheritDoc}
+	 */ 
         @Override
         public boolean clear() {
                 log.debug("entering clear");

@@ -11,6 +11,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+
+/**
+ * A reprensentation of an Food item.
+ * 
+ * The player can choose these items to compile a meal for an {@link Eater},
+ * 
+ * @author Jonas Schwind
+ * @version 1.0.0
+ */
 @Data
 @Entity
 @Table(name = "WasserarmShopItems")

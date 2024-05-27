@@ -20,29 +20,30 @@ public interface EaterRepsoitory {
         /**
          * Save a instance of {@link Eater}
          * 
-         * @param eater eater to store.
-         * @return {@code true} if Eater was stored.
+         * @param eater {@link Eater} to store.
+         * @return {@code true} if {@link Eater} was stored.
          */
         public boolean save(Eater eater);
 
         /**
          * Remove a instance of {@link Eater}
          * 
-         * @param eater eater to remove.
-         * @return {@code true} if Eater was removed.
+         * @param eater {@link Eater} to remove.
+         * @return {@code true} if {@link Eater} was removed.
          */
         public boolean delete(Eater eater);
 
         public Eater findById(long id) throws NoSuchEaterException;
 
         /**
-         * Gets the number of stored eaters
+         * Gets the number of stored {@link Eater}s
          * 
-         * @return amount of stored eaters
+         * @return amount of stored {@link Eater}
          */
         public long countAll();
 
         /**
+	 * Clears the Repository
          * 
          * @return {@code true} if everthying was deleted.
          */
