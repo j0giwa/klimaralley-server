@@ -9,8 +9,7 @@ BASE_URL="http://localhost:8080"
 
 test_water_items_endpoint(){
 
-	RESPONSE=$(curl -X 'GET' \ 
-			'http://localhost:8080/water/items' \
+	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/items' \
 			-H 'accept: application/json')
 	EXPECTED_PATTERN='^\[\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},.*\]$'
 
@@ -24,8 +23,7 @@ test_water_items_endpoint(){
 
 test_water_eater_endpoint() {
 
-	RESPONSE=$(curl -X 'GET' \ 
-			'http://localhost:8080/water/eater' \
+	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/eater' \
 			-H 'accept: application/json')
 	EXPECTED_PATTERN='^\{"id":[0-9]+,"name":"[A-Za-z\s]+","diet":"[A-Z]+","preferences":\[(\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\},)*\{"id":[0-9]+,"name":"[A-Za-z]+","type":"[A-Z_]+","water":[0-9]+,"price":[0-9]+\}\]\}$'
 
@@ -39,8 +37,7 @@ test_water_eater_endpoint() {
 
 test_auth_register_endpoint() {
 
-	RESPONSE=$(curl -X 'POST' \
-			'http://localhost:8080/auth/register?firstname=Joe&lastname=Shmoe&username=joe_shmoe&email=joe.shmoe%40example.com&password=SecurePassword123%21&verifyPassword=SecurePassword123%21' \
+	RESPONSE=$(curl -X 'POST' 'http://localhost:8080/auth/register?firstname=Joe&lastname=Shmoe&username=joe_shmoe&email=joe.shmoe%40example.com&password=SecurePassword123%21&verifyPassword=SecurePassword123%21' \
   			-H 'accept: text/plain' \
   			-d '')
 
@@ -54,8 +51,7 @@ test_auth_register_endpoint() {
 
 test_auth_login_endpoint() {
 
-	RESPONSE=$(curl -X 'GET' \ 
-		   'http://localhost:8080/water/eater' \
+	RESPONSE=$(curl -X 'GET' 'http://localhost:8080/water/eater' \
 		   -H 'accept: application/json')
 	EXPECTED_PATTERN='^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$' #valid jwt
 
