@@ -6,6 +6,7 @@ import java.util.Random;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.ItemRepository;
+import de.thowl.klimaralley.server.core.expections.wasserarm.NoSuchEaterException;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
@@ -40,6 +41,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 	private ItemRepository wasserarmShopItems;
 
 	public List<WasserarmShopItem> getAll() {
+
+		log.debug("entering getAll");
+
 		return wasserarmShopItems.findAll();
 	}
 
@@ -151,8 +155,20 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 */ 
 	@Override
 	public Eater getEater(long id) {
-		// TODO: Implement
-		throw new UnsupportedOperationException("Unimplemented method 'getEater'");
+
+		Eater eater;
+
+		log.debug("entering getEater");
+
+		try {
+			eater = eaters.findById(id);
+			return eater;
+		} catch (NoSuchEaterException e) {
+			log.error("No id with eater: {}", id);
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

@@ -72,6 +72,18 @@ public class AuthAPI {
 	/**
 	 * Registers a new user.
 	 *
+	 * NOTE: The user needs to provide a "secure" password
+	 * This is to protect the users from their own stupidity.
+	 *
+	 * Password requirements:
+	 * <ul>
+	 * <li>Minimum eight characters</li>
+	 * <li>at least one upper case English letter</li>
+	 * <li>at least one lower case English letter</li>
+	 * <li>at least one number</li>
+	 * <li>at least one special character</li>
+	 * </ul>
+	 *
 	 * @param schema {@link LoginSchema} contained in the resqeust
 	 * 
 	 * @return {@code 200 OK} on Register,
@@ -85,25 +97,21 @@ public class AuthAPI {
 		@ApiResponse(responseCode = "500", description = "User already exists"),
 	})
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> doRegister(RegisterSchema form) {
+	public ResponseEntity<Object> doRegister(RegisterSchema schema) {
 
 		log.info("entering doRegister (POST-Method: /register)");
 
-		if (!authsvc.validateEmail(form.getEmail())) {
+		if (!authsvc.validateEmail(schema.getEmail())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Email"); 
-		}
-
-		if (!authsvc.validatePassword(form.getPassword())) {
+		} else if (!authsvc.validatePassword(schema.getPassword())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Password");
-		}
-
-		if (!form.getPassword().equals(form.getVerifyPassword())) {
+		} else if (!schema.getPassword().equals(schema.getVerifyPassword())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password don't match");
 		}
 
 		try {
-			this.authsvc.register(form.getFirstname(), form.getLastname(), form.getUsername(),
-					form.getEmail(), form.getPassword());
+			this.authsvc.register(schema.getFirstname(), schema.getLastname(), schema.getUsername(),
+					schema.getEmail(), schema.getPassword());
 		} catch (DuplicateUserException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User already exists");
 		}
