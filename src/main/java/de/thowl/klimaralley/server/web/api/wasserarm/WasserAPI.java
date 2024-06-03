@@ -3,9 +3,11 @@ package de.thowl.klimaralley.server.web.api.wasserarm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
@@ -39,21 +41,6 @@ public class WasserAPI {
 
 	@Autowired
 	private WasserarmService wassersvc;
-
-	/**
-	 * Healthcheck method to 'ping' the API
-	 *
-	 * @return status code {@code 200}
-	 */
-	@Operation(summary = "Healthcheck")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Can be used to check if api is up"),
-	})
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseEntity<Object> healthCheck() {
-		log.info("entering getTask (GET-Method: /water/get)");
-		return ResponseEntity.status(HttpStatus.OK).body(null);
-	}
 
 	/**
 	 * Get all shop items from the Database
@@ -132,4 +119,61 @@ public class WasserAPI {
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
 	}
+
+	/**
+	 * Gets water from given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'GET' \
+	 *   'localhost:8080/water/water' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: Bearer <TOKEN>'
+	 *  
+	 * @return repsonse (code {@code 200}) with the water ammount
+	 */
+    	@Operation(summary = "Get water ammount of user")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "501", description = "Water"),
+	})
+	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
+	public ResponseEntity<Object> getWater(@RequestHeader(name = "Authorization") String token) {
+
+		Claims claims;
+
+		log.info("entering getScore (GET-Method: /water/water)");
+
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		// TODO: Stub
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+	}
+
+	/**
+	 * Increase water of given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'POST' \
+	 *   'localhost:8080/water/water?Amount=500' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: Bearer <TOKEN>'
+	 *  
+	 * @return repsonse (code {@code 200}) with a confirmation message
+	 */
+    	@Operation(summary = "Increase water ammount of user")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "501", description = "Ok")
+	})
+	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
+	public ResponseEntity<Object> setWater(@RequestHeader(name = "Authorization") String token, @RequestParam(name = "Amount") int ammount) {
+
+		Claims claims;
+
+		log.info("entering getScore (POST-Method: /water/water)");
+
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		// TODO: Stub
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+	}
+	
 }

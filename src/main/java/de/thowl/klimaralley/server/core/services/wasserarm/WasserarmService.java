@@ -36,4 +36,14 @@ public interface WasserarmService {
          * @return {@link Eater} with the given id 
          */
         public Eater getEater(long id);
+
+	/**
+	 *
+	 */
+	public int getWater();
+
+	/**
+	 *
+	 */
+	public void addWater();
 }

@@ -171,4 +171,22 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getWater() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getWater'");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addWater() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'addWater'");
+	}
+
 }
