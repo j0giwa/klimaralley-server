@@ -63,7 +63,11 @@ jobs:
       run: java -jar target/klimaralley.server-*.jar &
 
     - name: Wait for application to start
-      run: sleep 30
+      run: |
+        until $(curl --output /dev/null --silent --head --fail http://localhost:8080/health/); do
+          printf '.'
+          sleep 5
+        done
 
     - name: Run integration tests
       run: |
