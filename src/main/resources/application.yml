@@ -36,3 +36,4 @@ springdoc:
   swagger-ui:
     path: /docs
     operationsSorter: method
+

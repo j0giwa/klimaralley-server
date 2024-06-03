@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "auth", description = "Authentfication API")
+@Tag(name = "Authentfication", description = "Authentfication API, Contains opereations Login and Register")
 public class AuthAPI {
 
 	@Autowired

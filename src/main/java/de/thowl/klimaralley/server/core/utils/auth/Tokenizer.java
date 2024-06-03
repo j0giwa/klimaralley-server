@@ -12,7 +12,7 @@ import java.util.Date;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 /**
- * Generate and parese JWT
+ * Generate and parses JWT Bearer-tokens.
  * 
  * @author Jonas Schwind
  * @version 1.2.0

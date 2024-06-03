@@ -3,7 +3,6 @@ package de.thowl.klimaralley.server.web.api.wasserarm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,9 +15,11 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
@@ -101,8 +102,9 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "501", description = "Wasserarmsatt score")
 	})
+	@SecurityRequirement(name = "bearerAuth")
 	@RequestMapping(value = "/score", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> getScore(@RequestHeader(name = "Authorization", required = false) String token) {
+	public ResponseEntity<Object> getScore(@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token) {
 
 		Claims claims;
 
@@ -110,7 +112,7 @@ public class WasserAPI {
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		// enter scoreboard: TODO: stub
+		// enter scoreboard
 		if (claims != null) {
 			String userId = claims.getSubject();
 			log.info("Authenticated user ID: " + userId);
@@ -135,14 +137,19 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "501", description = "Water"),
 	})
+	@SecurityRequirement(name = "bearerAuth")
 	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
-	public ResponseEntity<Object> getWater(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<Object> getWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token) {
 
 		Claims claims;
 
 		log.info("entering getScore (GET-Method: /water/water)");
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		if (claims != null) {
+			log.info("Authenticated user ID: {}", claims.getSubject());
+		}
 
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
@@ -163,14 +170,19 @@ public class WasserAPI {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "501", description = "Ok")
 	})
+	@SecurityRequirement(name = "bearerAuth")
 	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> setWater(@RequestHeader(name = "Authorization") String token, @RequestParam(name = "Amount") int ammount) {
+	public ResponseEntity<Object> setWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token, @RequestParam(name = "Amount") int ammount) {
 
 		Claims claims;
 
 		log.info("entering getScore (POST-Method: /water/water)");
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		if (claims != null) {
+			log.info("Authenticated user ID: {}", claims.getSubject());
+		}
 
 		// TODO: Stub
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
