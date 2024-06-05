@@ -105,10 +105,6 @@ public class WasserAPI {
 	 */
 	@Operation(
 		summary = "Retrieves game score based on items", 
-		requestBody = @RequestBody(
-			description = "Wasserarm-satt game submission schema containing eaterId and items", 
-			required = true, 
-			content = @Content(schema = @Schema(implementation = GameSubmission.class))), 
 		responses = {
 			@ApiResponse(
 				responseCode="501",
@@ -117,7 +113,17 @@ public class WasserAPI {
 		security = @SecurityRequirement(name = "bearerAuth")			
 	)	
 	@RequestMapping(value = "/score", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> getScore(@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token) {
+	public ResponseEntity<Object> getScore(
+		@Parameter(
+			hidden = true
+		) @RequestHeader(name = "Authorization", required = false) String token,
+		@Parameter(
+        		description = "Wasserarm-satt game submission schema containing eaterId and items",
+        		required = true,
+        		content = @Content(
+            			schema = @Schema(implementation = GameSubmission.class))
+    		) @RequestBody GameSubmission schema
+	) {
 
 		Claims claims;
 
@@ -156,7 +162,9 @@ public class WasserAPI {
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
-	public ResponseEntity<Object> getWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<Object> getWater(
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token
+	) {
 
 		Claims claims;
 
@@ -192,7 +200,10 @@ public class WasserAPI {
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> setWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token, @RequestParam(name = "Amount") int ammount) {
+	public ResponseEntity<Object> setWater(
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token,
+		@RequestParam(name = "Amount") int ammount
+	) {
 
 		Claims claims;
 

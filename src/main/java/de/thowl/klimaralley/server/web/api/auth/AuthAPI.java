@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
@@ -14,6 +14,7 @@ import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,11 +46,7 @@ public class AuthAPI {
 	 *	   {@code 201 UNAUTHORIZED} on unsuccessfull login
 	 */
 	@Operation(
-		summary = "Authenticate a user", 
-		requestBody = @RequestBody(
-			description = "User Login schema containing username and password", 
-			required = true, 
-			content = @Content(schema = @Schema(implementation = LoginSchema.class))), 
+		summary = "Authenticate a user",
 		responses = {
 			@ApiResponse(
 				responseCode = "200", 
@@ -61,8 +58,15 @@ public class AuthAPI {
 				content = @Content(schema = @Schema(implementation = String.class)))
 	})
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> doLogin(@RequestBody LoginSchema schema) {
-
+	public ResponseEntity<Object> doLogin(
+		@Parameter(
+			description = "User Login schema containing username and password",
+			required = true, 
+			content = @Content(
+				schema = @Schema(implementation = LoginSchema.class))
+		) @RequestBody LoginSchema schema
+	) {
+	
 		String email, password, token;
 
 		log.info("entering doLogin (POST-Method: /login)");
@@ -101,11 +105,7 @@ public class AuthAPI {
 	 *         {@code 500 INTERNAL SERVER ERROR} if the user exists.
 	 */
 	@Operation(
-		summary = "Register a new User", 
-	        requestBody = @RequestBody(
-			description = "User Register schema containing username and password", 
-			required = true,
-			content = @Content(schema = @Schema(implementation = RegisterSchema.class))), 
+		summary = "Register a new User",
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
@@ -121,7 +121,15 @@ public class AuthAPI {
 				content = @Content(schema = @Schema(implementation = String.class))),
 	})
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> doRegister(@RequestBody RegisterSchema schema) {
+	public ResponseEntity<Object> doRegister(
+		@Parameter(
+        		description = "User Register schema containing username and password",
+        		required = true,
+        		content = @Content(
+            			schema = @Schema(implementation = RegisterSchema.class)
+        		)
+    		) @RequestBody RegisterSchema schema
+	) {
 
 		log.info("entering doRegister (POST-Method: /register)");
 
