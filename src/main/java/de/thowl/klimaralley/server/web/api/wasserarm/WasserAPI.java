@@ -13,7 +13,9 @@ import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
+import de.thowl.klimaralley.server.web.schema.wasserarm.WasserarmGameScore;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
@@ -109,10 +112,14 @@ public class WasserAPI {
 			@ApiResponse(
 				responseCode="501",
 				description="Wasserarmsatt score",
-				content = @Content(schema = @Schema(implementation = String.class))) },
+				content= @Content(
+					schema = @Schema(implementation = WasserarmGameScore.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'Good Job', 'score': 9500 }"))) 
+			},
 		security = @SecurityRequirement(name = "bearerAuth")			
-	)	
-	@RequestMapping(value = "/score", method = RequestMethod.POST, produces = "text/plain")
+	)
+	@RequestMapping(value = "/score", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> getScore(
 		@Parameter(
 			hidden = true
@@ -126,9 +133,11 @@ public class WasserAPI {
 	) {
 
 		Claims claims;
+		ResponseBody body;
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
+		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
 		// enter scoreboard
@@ -138,7 +147,8 @@ public class WasserAPI {
 		}
 
 		// TODO: Stub
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+		body.setMessage("Not implemented");
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 
 	/**
@@ -158,7 +168,11 @@ public class WasserAPI {
 			@ApiResponse(
 				responseCode = "501",
 				description = "Water in Liters",
-				content = @Content(schema=@Schema(implementation=Integer.class)))},
+				content = @Content(
+					schema = @Schema(
+						implementation = Integer.class), 
+						examples = @ExampleObject(value = "20000")))
+		},
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
@@ -167,9 +181,11 @@ public class WasserAPI {
 	) {
 
 		Claims claims;
+		ResponseBody body;
 
 		log.info("entering getScore (GET-Method: /water/water)");
 
+		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
 		if (claims != null) {
@@ -177,7 +193,8 @@ public class WasserAPI {
 		}
 
 		// TODO: Stub
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+		body.setMessage("Not implemented");
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 
 	/**
@@ -195,8 +212,12 @@ public class WasserAPI {
 		summary = "Increase water amount of user", 
 		responses = {
 			@ApiResponse(
-				responseCode = "501", description = "OK",
-				content = @Content(schema = @Schema(implementation = String.class))) }, 
+				responseCode = "501",
+				description = "Water ammount increased",
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class), 
+					examples = @ExampleObject(value = "{ 'message': 'Water increased by 500' }")))
+		}, 
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
@@ -206,9 +227,11 @@ public class WasserAPI {
 	) {
 
 		Claims claims;
+		ResponseBody body;
 
 		log.info("entering getScore (POST-Method: /water/water)");
 
+		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
 		if (claims != null) {
@@ -216,7 +239,8 @@ public class WasserAPI {
 		}
 
 		// TODO: Stub
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Not implemented");
+		body.setMessage("Not implemented");
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 	
 }

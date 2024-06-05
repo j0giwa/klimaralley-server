@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
+import de.thowl.klimaralley.server.web.schema.auth.AuthentificationToken;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
+import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,13 +54,19 @@ public class AuthAPI {
 			@ApiResponse(
 				responseCode = "200", 
 				description = "Successful operation", 
-				content = @Content(schema = @Schema(implementation = String.class))),
+				content= @Content(
+					schema = @Schema(implementation = AuthentificationToken.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'Authentication successful', 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'}"))),
 			@ApiResponse(
 				responseCode = "401", 
 				description = "Invalid credentials",
-				content = @Content(schema = @Schema(implementation = String.class)))
+				content= @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'Invalid credentials' }")))
 	})
-	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "text/plain")
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> doLogin(
 		@Parameter(
 			description = "User Login schema containing username and password",
@@ -67,6 +76,7 @@ public class AuthAPI {
 		) @RequestBody LoginSchema schema
 	) {
 	
+		ResponseBody body;
 		String email, password, token;
 
 		log.info("entering doLogin (POST-Method: /login)");
@@ -77,10 +87,15 @@ public class AuthAPI {
 		try {
 			token = authsvc.login(email, password);
 		} catch (InvalidCredentialsException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+			body = new ResponseBody();
+			body.setMessage("Invalid credentials");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(token);
+		body = new AuthentificationToken();
+		body.setMessage("Authentication successful");
+		((AuthentificationToken) body).setToken(token);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
 	/**
@@ -110,17 +125,26 @@ public class AuthAPI {
 			@ApiResponse(
 				responseCode = "200",
 				description = "User Registered",
-				content = @Content(schema=@Schema(implementation=String.class))),
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'User Registered' }"))),
 			@ApiResponse(
 				responseCode = "400",
 				description = "Invalid credentials",
-				content = @Content(schema = @Schema(implementation = String.class))),
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'Invalid credentials' }"))),
 			@ApiResponse(
 				responseCode = "500",
 				description = "User already exists",
-				content = @Content(schema = @Schema(implementation = String.class))),
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(
+						value = "{ 'message': 'User already exists' }"))),
 	})
-	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
+	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> doRegister(
 		@Parameter(
         		description = "User Register schema containing username and password",
@@ -131,24 +155,33 @@ public class AuthAPI {
     		) @RequestBody RegisterSchema schema
 	) {
 
+		ResponseBody body;
+
 		log.info("entering doRegister (POST-Method: /register)");
 
+		body = new ResponseBody();
+
 		if (!authsvc.validateEmail(schema.getEmail())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Email"); 
+			body.setMessage("Invalid Email");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body); 
 		} else if (!authsvc.validatePassword(schema.getPassword())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Password");
+			body.setMessage("Invalid Password");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
 		} else if (!schema.getPassword().equals(schema.getVerifyPassword())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password don't match");
+			body.setMessage("Passwords don't match");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
 		}
 
 		try {
 			this.authsvc.register(schema.getFirstname(), schema.getLastname(), schema.getUsername(),
 					schema.getEmail(), schema.getPassword());
 		} catch (DuplicateUserException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User already exists");
+			body.setMessage("User already exists");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body("User Registered");
+		body.setMessage("User registered");
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 	
 }
