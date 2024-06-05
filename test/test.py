@@ -37,7 +37,7 @@ def test_auth_register_endpoint():
     
     response = requests.post(url, headers=headers, json=body)
     response_text = response.text
-    expected = "{\s*\"message\":\s*\"User registered\"\s*}"
+    expected = r"\{\s*\"message\":\s*\"User registered\"\s*\}"
     
     assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
@@ -52,7 +52,7 @@ def test_auth_login_endpoint():
     
     response = requests.post(url, headers=headers, json=body)
     response_text = response.text
-    expected = r"{\s*\"message\":\s*\"Authentication successful\",\s*\"token\":\s*\"(([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*))\"\s*}"
+    expected = r"\{\s*\"message\":\s*\"Authentication successful\",\s*\"token\":\s*\"(([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*))\"\s*\}"
     
     assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
