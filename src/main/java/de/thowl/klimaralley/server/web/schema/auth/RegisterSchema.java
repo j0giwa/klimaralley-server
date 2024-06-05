@@ -5,7 +5,7 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
-@Schema(description = "Schema for user registration")
+@Schema(name = "User Registration", description = "Schema for user registration")
 public class RegisterSchema {
 
     @Schema(description = "User's first name", example = "Joe")

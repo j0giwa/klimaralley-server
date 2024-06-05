@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
@@ -15,7 +16,6 @@ import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -44,14 +44,24 @@ public class AuthAPI {
 	 * @return JWT token (status: {@code 200 OK}) on successfull login,
 	 *	   {@code 201 UNAUTHORIZED} on unsuccessfull login
 	 */
-	@Operation(summary = "login")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Successful operation",
-			content = @Content(schema = @Schema(implementation = String.class))),
-		@ApiResponse(responseCode = "401", description = "Invalid credentials"),
+	@Operation(
+		summary = "Authenticate a user", 
+		requestBody = @RequestBody(
+			description = "User Login schema containing username and password", 
+			required = true, 
+			content = @Content(schema = @Schema(implementation = LoginSchema.class))), 
+		responses = {
+			@ApiResponse(
+				responseCode = "200", 
+				description = "Successful operation", 
+				content = @Content(schema = @Schema(implementation = String.class))),
+			@ApiResponse(
+				responseCode = "401", 
+				description = "Invalid credentials",
+				content = @Content(schema = @Schema(implementation = String.class)))
 	})
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> doLogin(LoginSchema schema) {
+	public ResponseEntity<Object> doLogin(@RequestBody LoginSchema schema) {
 
 		String email, password, token;
 
@@ -90,14 +100,28 @@ public class AuthAPI {
 	 *         {@code 400 BAD REQUEST} on invalid credentials,
 	 *         {@code 500 INTERNAL SERVER ERROR} if the user exists.
 	 */
-	@Operation(summary = "register")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "User Registered"),
-		@ApiResponse(responseCode = "400", description = "Invalid credentials"),
-		@ApiResponse(responseCode = "500", description = "User already exists"),
+	@Operation(
+		summary = "Register a new User", 
+	        requestBody = @RequestBody(
+			description = "User Register schema containing username and password", 
+			required = true,
+			content = @Content(schema = @Schema(implementation = RegisterSchema.class))), 
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "User Registered",
+				content = @Content(schema=@Schema(implementation=String.class))),
+			@ApiResponse(
+				responseCode = "400",
+				description = "Invalid credentials",
+				content = @Content(schema = @Schema(implementation = String.class))),
+			@ApiResponse(
+				responseCode = "500",
+				description = "User already exists",
+				content = @Content(schema = @Schema(implementation = String.class))),
 	})
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = "text/plain")
-	public ResponseEntity<Object> doRegister(RegisterSchema schema) {
+	public ResponseEntity<Object> doRegister(@RequestBody RegisterSchema schema) {
 
 		log.info("entering doRegister (POST-Method: /register)");
 
@@ -118,5 +142,5 @@ public class AuthAPI {
 
 		return ResponseEntity.status(HttpStatus.OK).body("User Registered");
 	}
-
+	
 }

@@ -13,14 +13,15 @@ import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,11 +51,13 @@ public class WasserAPI {
 	 * 
 	 * @return {@link WasserarmShopItem}[] (code {@code 200 OK})
 	 */
-	@Operation(summary = "Retrieves all shop items from the Database")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", 
-			description = "Wasserarmsatt shop items", 
-			content = @Content(array = @ArraySchema(schema = @Schema(implementation = WasserarmShopItem.class)))),
+	@Operation(
+		summary = "Retrieve all Wasserarm-satt shop items", 
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Wasserarmsatt shop items",
+				content = @Content(array = @ArraySchema(schema = @Schema(implementation = WasserarmShopItem.class)))),
 	})
 	@RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getAllItems() {
@@ -69,11 +72,13 @@ public class WasserAPI {
 	 * 
 	 * @return repsonse (code {@code 200}) with all shop items as JSON
 	 */
-	@Operation(summary = "Retrieves a Eater to serve")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "Wasserarmsatt Eater information",
-			content = @Content(schema = @Schema(implementation = Eater.class))),
+	@Operation(
+		summary = "Retrieves a Eater to serve",
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Wasserarmsatt Eater information",
+				content = @Content(schema = @Schema(implementation = Eater.class))),
 	})
 	@RequestMapping(value = "/eater", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getEater() {
@@ -98,11 +103,19 @@ public class WasserAPI {
 	 *  
 	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
-    	@Operation(summary = "Retrieves game score based on items")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "501", description = "Wasserarmsatt score")
-	})
-	@SecurityRequirement(name = "bearerAuth")
+	@Operation(
+		summary = "Retrieves game score based on items", 
+		requestBody = @RequestBody(
+			description = "Wasserarm-satt game submission schema containing eaterId and items", 
+			required = true, 
+			content = @Content(schema = @Schema(implementation = GameSubmission.class))), 
+		responses = {
+			@ApiResponse(
+				responseCode="501",
+				description="Wasserarmsatt score",
+				content = @Content(schema = @Schema(implementation = String.class))) },
+		security = @SecurityRequirement(name = "bearerAuth")			
+	)	
 	@RequestMapping(value = "/score", method = RequestMethod.POST, produces = "text/plain")
 	public ResponseEntity<Object> getScore(@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token) {
 
@@ -133,11 +146,15 @@ public class WasserAPI {
 	 *  
 	 * @return repsonse (code {@code 200}) with the water ammount
 	 */
-    	@Operation(summary = "Get water ammount of user")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "501", description = "Water"),
-	})
-	@SecurityRequirement(name = "bearerAuth")
+	@Operation(
+		summary = "Get water amount of user",
+		responses = {
+			@ApiResponse(
+				responseCode = "501",
+				description = "Water in Liters",
+				content = @Content(schema=@Schema(implementation=Integer.class)))},
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
 	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
 	public ResponseEntity<Object> getWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token) {
 
@@ -166,11 +183,14 @@ public class WasserAPI {
 	 *  
 	 * @return repsonse (code {@code 200}) with a confirmation message
 	 */
-    	@Operation(summary = "Increase water ammount of user")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "501", description = "Ok")
-	})
-	@SecurityRequirement(name = "bearerAuth")
+	@Operation(
+		summary = "Increase water amount of user", 
+		responses = {
+			@ApiResponse(
+				responseCode = "501", description = "OK",
+				content = @Content(schema = @Schema(implementation = String.class))) }, 
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
 	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
 	public ResponseEntity<Object> setWater(@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token, @RequestParam(name = "Amount") int ammount) {
 

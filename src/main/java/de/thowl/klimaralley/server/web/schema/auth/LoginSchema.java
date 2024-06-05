@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(description = "Schema for user login")
+@Schema(name = "User Login" ,description = "Schema for user login")
 public class LoginSchema {
 
 	@Schema(description = "Accounts's email address", example = "joe.shmoe@example.com")
