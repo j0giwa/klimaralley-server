@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/health")
 @Tag(name = "Healthcheck", description = "Test if server is running")
 public class HealthAPI {
-	
+
 	/**
 	 * Check if Server is up
 	 *
@@ -26,13 +26,8 @@ public class HealthAPI {
 	 * 
 	 * @return code {@code 200 OK}
 	 */
-	@Operation(
-		summary = "Perform a Healthcheck",
-		responses = {
-			@ApiResponse(
-				responseCode = "200",
-				description = "OK",
-				content = @Content(schema=@Schema(implementation=String.class))),
+	@Operation(summary = "Perform a Healthcheck", responses = {
+			@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = String.class))),
 	})
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> heathCheck() {
