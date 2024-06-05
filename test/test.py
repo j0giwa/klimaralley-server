@@ -39,7 +39,7 @@ def test_auth_register_endpoint():
     response_text = response.text
     expected = "{\s*\"message\":\s*\"User registered\"\s*}"
     
-    assert re.match(expected, response_text), "Response does not match the expected pattern"
+    assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
 @pytest.mark.dependency(depends=['test_auth_register_endpoint'])
 def test_auth_login_endpoint():
@@ -54,5 +54,5 @@ def test_auth_login_endpoint():
     response_text = response.text
     expected = r"{\s*\"message\":\s*\"Authentication successful\",\s*\"token\":\s*\"(([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*))\"\s*}"
     
-    assert re.match(expected, response_text), "Response does not match the expected pattern"
+    assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
