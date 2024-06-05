@@ -26,7 +26,7 @@ def test_water_eater_endpoint():
 def test_auth_register_endpoint():
     url = 'http://localhost:8080/auth/register'
     headers = {'accept': 'text/plain'}
-    params = {
+    body = {
         'firstname': 'Joe',
         'lastname': 'Shmoe',
         'username': 'joe_shmoe',
@@ -35,7 +35,7 @@ def test_auth_register_endpoint():
         'verifyPassword': 'SecurePassword123!'
     }
     
-    response = requests.post(url, headers=headers, params=params)
+    response = requests.post(url, headers=headers, json=params)
     response_text = response.text
     
     assert response_text == "User Registered", "Response does not match the expected pattern"
@@ -44,12 +44,12 @@ def test_auth_register_endpoint():
 def test_auth_login_endpoint():
     url = 'http://localhost:8080/auth/login'
     headers = {'accept': 'text/plain'}
-    params = {
+    body = {
         'email': 'joe.shmoe@example.com',
         'password': 'SecurePassword123!',
     }
     
-    response = requests.post(url, headers=headers, params=params)
+    response = requests.post(url, headers=headers, json=params)
     response_text = response.text
     expected = r"^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)"  # valid JWT
     
