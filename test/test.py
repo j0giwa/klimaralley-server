@@ -35,7 +35,7 @@ def test_auth_register_endpoint():
     print("Testing /auth/register")
     
     url = 'http://localhost:8080/auth/register'
-    headers = {'accept': 'text/plain'}
+    headers = {'accept': 'application/json'}
     body = {
         'firstname': 'Joe',
         'lastname': 'Shmoe',
@@ -58,7 +58,7 @@ def test_auth_login_endpoint():
     print("Testing /auth/register")
     
     url = 'http://localhost:8080/auth/login'
-    headers = {'accept': 'text/plain'}
+    headers = {'accept': 'application/json'}
     body = {
         'email': 'joe.shmoe@example.com',
         'password': 'SecurePassword123!',
