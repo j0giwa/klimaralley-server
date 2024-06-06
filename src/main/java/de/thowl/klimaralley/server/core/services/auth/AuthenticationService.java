@@ -7,6 +7,9 @@ import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 /**
  * Provides User Authentifaciton/Management funtionalitys
+ * 
+ * @author Jonas Schwind
+ * @version 1.2.0
  */
 public interface AuthenticationService {
 

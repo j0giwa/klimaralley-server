@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.thowl.klimaralley.server.core.expections.auth.DuplicateUserException;
 import de.thowl.klimaralley.server.core.expections.auth.InvalidCredentialsException;
 import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
-import de.thowl.klimaralley.server.web.schema.auth.AuthentificationToken;
+import de.thowl.klimaralley.server.web.schema.auth.AuthentificationResponse;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
@@ -55,7 +55,7 @@ public class AuthAPI {
 				responseCode = "200", 
 				description = "Successful operation", 
 				content= @Content(
-					schema = @Schema(implementation = AuthentificationToken.class),
+					schema = @Schema(implementation = AuthentificationResponse.class),
 					examples = @ExampleObject(
 						value = "{ 'message': 'Authentication successful', 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'}"))),
 			@ApiResponse(
@@ -92,9 +92,9 @@ public class AuthAPI {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 		}
 
-		body = new AuthentificationToken();
+		body = new AuthentificationResponse();
 		body.setMessage("Authentication successful");
-		((AuthentificationToken) body).setToken(token);
+		((AuthentificationResponse) body).setToken(token);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 

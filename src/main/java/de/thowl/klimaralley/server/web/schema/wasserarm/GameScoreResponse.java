@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Schema(name = "Wasserarm-satt game score", description = "Score revieced at the end of the game")
-public class WasserarmGameScore extends ResponseBody {
+public class GameScoreResponse extends ResponseBody {
 
 	@Schema(description = "earned points", example = "9500") // IT'S OVER 9000!!!
 	private int score;

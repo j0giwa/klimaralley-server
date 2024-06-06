@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Schema(name = "User Authentification Response", description = "User Authentification token")
-public class AuthentificationToken extends ResponseBody{
+public class AuthentificationResponse extends ResponseBody{
 
 	@Schema(description = "jwt authentification token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
 	private String token;

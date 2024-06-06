@@ -15,7 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Implementaion of the {@link AuthenticationService} interface
- * {@inheritDoc}
+ * 
+ * @author Jonas Schwind
+ * @version 1.2.0
  */
 @Slf4j
 @Service

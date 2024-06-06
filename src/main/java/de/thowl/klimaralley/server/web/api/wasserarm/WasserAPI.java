@@ -15,8 +15,8 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
-import de.thowl.klimaralley.server.web.schema.wasserarm.WasserarmGameScore;
-import de.thowl.klimaralley.server.web.schema.wasserarm.Water;
+import de.thowl.klimaralley.server.web.schema.wasserarm.GameScoreResponse;
+import de.thowl.klimaralley.server.web.schema.wasserarm.WaterResponse;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -127,7 +127,7 @@ public class WasserAPI {
 				responseCode="501",
 				description="Wasserarmsatt score",
 				content= @Content(
-					schema = @Schema(implementation = WasserarmGameScore.class),
+					schema = @Schema(implementation = GameScoreResponse.class),
 					examples = @ExampleObject(
 						value = "{ 'message': 'Good Job', 'score': 9500 }"))) 
 			},
@@ -184,7 +184,7 @@ public class WasserAPI {
 				description = "Water in Liters",
 				content = @Content(
 					schema = @Schema(
-						implementation = Water.class), 
+						implementation = WaterResponse.class), 
 						examples = @ExampleObject(value = "{ 'message': 'Retrieved water ammount', 'water': 500 }")))
 		},
 		security = @SecurityRequirement(name = "bearerAuth")
@@ -211,9 +211,9 @@ public class WasserAPI {
 			water = 25000;
 		}
 
-		body = new Water();
+		body = new WaterResponse();
 		body.setMessage("Retrieved water amount");
-		((Water) body).setWater(water);
+		((WaterResponse) body).setWater(water);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
@@ -235,7 +235,7 @@ public class WasserAPI {
 				responseCode = "200",
 				description = "Water ammount increased",
 				content = @Content(
-					schema = @Schema(implementation = Water.class), 
+					schema = @Schema(implementation = WaterResponse.class), 
 					examples = @ExampleObject(value = "{ 'message': 'Increased water ammount', 'water': 500 }"))),
 			@ApiResponse(
 				responseCode = "401",
@@ -274,9 +274,9 @@ public class WasserAPI {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 		}
 
-		body = new Water();
+		body = new WaterResponse();
 		body.setMessage("Increased water ammount");
-		((Water) body).setWater(water);
+		((WaterResponse) body).setWater(water);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 	

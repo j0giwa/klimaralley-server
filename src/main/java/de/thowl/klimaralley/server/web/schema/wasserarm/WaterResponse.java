@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Schema(name = "Wasserarm-satt water response", description = "Water ammount of player")
-public class Water extends ResponseBody {
+public class WaterResponse extends ResponseBody {
 
 	@Schema(description = "water in liters", example = "500")
 	private int water;
