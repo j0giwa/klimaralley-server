@@ -66,7 +66,7 @@ jobs:
       run: |
         until $(curl --output /dev/null --silent --head --fail http://localhost:8080/health/); do
           printf '.'
-          sleep 5
+          sleep 10
         done
 
     - name: Run integration tests
