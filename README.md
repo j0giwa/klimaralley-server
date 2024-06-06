@@ -45,8 +45,7 @@ To view the documentation, start the server and navigate to [Swagger UI (http://
 
 ## Testing
 Testing is automated via github actions.
-Run tests manualy:
+Run tests manualy, execute:
 ```bash
-mvn test
+mvn test && pytest ./test/test.py
 ```
-
