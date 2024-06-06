@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
-import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
@@ -181,12 +180,12 @@ public class WasserAPI {
 		summary = "Get water amount of user",
 		responses = {
 			@ApiResponse(
-				responseCode = "501",
+				responseCode = "200",
 				description = "Water in Liters",
 				content = @Content(
 					schema = @Schema(
-						implementation = Integer.class), 
-						examples = @ExampleObject(value = "20000")))
+						implementation = Water.class), 
+						examples = @ExampleObject(value = "{ 'message': 'Retrieved water ammount', 'water': 500 }")))
 		},
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
@@ -213,7 +212,7 @@ public class WasserAPI {
 		}
 
 		body = new Water();
-		body.setMessage("Revieved water ammount");
+		body.setMessage("Retrieved water amount");
 		((Water) body).setWater(water);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
@@ -230,14 +229,20 @@ public class WasserAPI {
 	 * @return repsonse (code {@code 200}) with a confirmation message
 	 */
 	@Operation(
-		summary = "Increase water amount of user", 
+		summary = "Increase water amount of user (Authentification required)", 
 		responses = {
 			@ApiResponse(
-				responseCode = "501",
+				responseCode = "200",
 				description = "Water ammount increased",
 				content = @Content(
+					schema = @Schema(implementation = Water.class), 
+					examples = @ExampleObject(value = "{ 'message': 'Increased water ammount', 'water': 500 }"))),
+			@ApiResponse(
+				responseCode = "401",
+				description = "User not authentificated",
+				content = @Content(
 					schema = @Schema(implementation = ResponseBody.class), 
-					examples = @ExampleObject(value = "{ 'message': 'Water increased by 500' }")))
+					examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
 		}, 
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
@@ -262,10 +267,15 @@ public class WasserAPI {
 			log.info("Authenticated user ID: {}", claims.getSubject());
 			this.wassersvc.addWater(userId, amount);
 			water = this.wassersvc.getWater(userId);
+		} else {
+
+			body = new ResponseBody();
+			body.setMessage("Authorisation token needed, get one from /auth/login");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 		}
 
 		body = new Water();
-		body.setMessage("Revieved water ammount");
+		body.setMessage("Increased water ammount");
 		((Water) body).setWater(water);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
