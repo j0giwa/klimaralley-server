@@ -9,14 +9,6 @@ on:
 
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            java: 8
-          - os: ubuntu-latest
-            java: 21
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -29,25 +21,18 @@ jobs:
         options: --health-cmd="mysqladmin ping -h 127.0.0.1 -u root --silent" --health-interval=10s --health-timeout=5s --health-retries=10
 
     steps:
-    - name: Create empty schema
-      run: |
-        mysql -h 127.0.0.1 -P 3306 -u root --password= klimaralley << EOF
-        CREATE DATABASE IF NOT EXISTS klimaralley;
-        USE klimaralley;
-        EOF
-
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Set up JDK 21
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v2
       with:
         distribution: 'adopt'
         java-version: '21'
         architecture: 'x64'
 
     - name: Install Python and dependencies
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v2
       with:
         python-version: '3.x'
 
@@ -58,9 +43,12 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B package -DskipTests --file pom.xml
+      id: build_step
 
     - name: Start the Spring Boot application
       run: java -jar target/klimaralley.server-*.jar &
+      if: steps.build_step.conclusion == 'success'
+      id: start_application
 
     - name: Wait for application to start
       run: |
@@ -69,7 +57,8 @@ jobs:
           sleep 10
         done
         echo "Application is up and running"
+      if: steps.start_application.conclusion == 'success'
 
     - name: Run integration tests
-      run: |
-        pytest ./test/test.py
+      run: pytest ./test/test.py
+      if: steps.start_application.conclusion == 'success'
