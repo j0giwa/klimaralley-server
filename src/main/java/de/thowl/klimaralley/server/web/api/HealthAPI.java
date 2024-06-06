@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/health")
-@Tag(name = "Healthcheck", description = "Test if server is running")
+@Tag(name = "Healthcheck", description = "Test if the server is running")
 public class HealthAPI {
 
 	/**
@@ -28,7 +28,7 @@ public class HealthAPI {
 	 * 
 	 * @return code {@code 200 OK}
 	 */
-	@Operation(summary = "Perform a Healthcheck", responses = {
+	@Operation(summary = "Ping", responses = {
 			@ApiResponse(
 				responseCode = "200",
 				description = "OK",

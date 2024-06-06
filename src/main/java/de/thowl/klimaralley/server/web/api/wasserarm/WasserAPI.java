@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
+import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
 import de.thowl.klimaralley.server.web.schema.wasserarm.WasserarmGameScore;
+import de.thowl.klimaralley.server.web.schema.wasserarm.Water;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,6 +48,19 @@ public class WasserAPI {
 
 	@Autowired
 	private WasserarmService wassersvc;
+
+	/**
+	 * Check if the user is authentifcated
+	 *
+	 * @param claims the claims of the token (if any)
+	 * @return {@code true} if there are claims
+	 */
+	private boolean authenticated(Claims claims) {
+		if (claims != null) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Get all shop items from the Database
@@ -134,16 +149,16 @@ public class WasserAPI {
 
 		Claims claims;
 		ResponseBody body;
+		boolean scoreBoardMe;
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+		scoreBoardMe = authenticated(claims);
 
-		// enter scoreboard
-		if (claims != null) {
-			String userId = claims.getSubject();
-			log.info("Authenticated user ID: " + userId);
+		if (scoreBoardMe) {
+			log.info("Authenticated user ID: " + claims.getSubject());
 		}
 
 		// TODO: Stub
@@ -175,26 +190,32 @@ public class WasserAPI {
 		},
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
-	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "text/plain")
+	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
 	) {
 
+		int water;
 		Claims claims;
 		ResponseBody body;
 
 		log.info("entering getScore (GET-Method: /water/water)");
 
-		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (claims != null) {
-			log.info("Authenticated user ID: {}", claims.getSubject());
+		water = 0;
+		if (authenticated(claims)) {
+			int userId = Integer.parseInt(claims.getSubject());
+			log.info("Authenticated user ID: {}", userId);
+			water = this.wassersvc.getWater(userId);
+		} else {
+			water = 25000;
 		}
 
-		// TODO: Stub
-		body.setMessage("Not implemented");
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
+		body = new Water();
+		body.setMessage("Revieved water ammount");
+		((Water) body).setWater(water);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
 	/**
@@ -220,12 +241,13 @@ public class WasserAPI {
 		}, 
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
-	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "text/plain")
+	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Object> setWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization") String token,
-		@RequestParam(name = "Amount") int ammount
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
+		@RequestParam(name = "Amount") int amount
 	) {
 
+		int water;
 		Claims claims;
 		ResponseBody body;
 
@@ -234,13 +256,18 @@ public class WasserAPI {
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (claims != null) {
+		water = 0;
+		if (authenticated(claims)) {
+			long userId = Long.parseLong(claims.getSubject());
 			log.info("Authenticated user ID: {}", claims.getSubject());
+			this.wassersvc.addWater(userId, amount);
+			water = this.wassersvc.getWater(userId);
 		}
 
-		// TODO: Stub
-		body.setMessage("Not implemented");
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
+		body = new Water();
+		body.setMessage("Revieved water ammount");
+		((Water) body).setWater(water);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 	
 }

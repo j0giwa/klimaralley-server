@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Random;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.ItemRepository;
 import de.thowl.klimaralley.server.core.expections.wasserarm.NoSuchEaterException;
+import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
 
@@ -39,6 +41,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 	@Autowired
 	private ItemRepository wasserarmShopItems;
+
+	@Autowired
+	private UserRepository users;
 
 	public List<WasserarmShopItem> getAll() {
 
@@ -175,18 +180,30 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getWater() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getWater'");
+	public int getWater(long id) {
+
+		User user;
+
+		log.debug("entering getEater");
+
+		user = this.users.findById(id).get();
+
+		return user.getWater();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addWater() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'addWater'");
+	public void addWater(long id, int amount) {
+	
+		User user;
+
+		log.debug("entering getEater");
+
+		user = this.users.findById(id).get();
+
+		user.setWater(user.getWater() + amount);
 	}
 
 }

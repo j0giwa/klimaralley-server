@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @version 1.0.0
  */
 @Data
-@Schema(name = "Response Body", description = "Generic response body")
+@Schema(name = "Generic Response", description = "Client Message")
 public class ResponseBody {
 
 	@Schema(description = "Message", example = "lorem ipsum")

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(name = "User Authentification Token", description = "User Authentification response")
+@Schema(name = "User Authentification Response", description = "User Authentification token")
 public class AuthentificationToken extends ResponseBody{
 
 	@Schema(description = "jwt authentification token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")

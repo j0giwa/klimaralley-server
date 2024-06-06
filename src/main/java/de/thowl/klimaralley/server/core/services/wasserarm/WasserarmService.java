@@ -40,10 +40,10 @@ public interface WasserarmService {
 	/**
 	 *
 	 */
-	public int getWater();
+	public int getWater(long id);
 
 	/**
 	 *
 	 */
-	public void addWater();
+	public void addWater(long id, int amount);
 }
