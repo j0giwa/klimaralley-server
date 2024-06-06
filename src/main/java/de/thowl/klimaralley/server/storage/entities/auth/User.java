@@ -49,7 +49,6 @@ public class User {
 	private String password;
 
 	@NotNull
-	@NonNull
 	private int water; // For wasserarm-satt
 
 }

@@ -15,16 +15,23 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class FlutServiceImpl {
+public class FlutServiceImpl implements FlutService {
 
     @Autowired
     private BuildingRepository buildings;
 
+    @Override
     public ArrayList<Building> getBuildings(){
         log.debug("entering getBuildings");
         ArrayList<Building> buildings = new ArrayList<Building>();
         buildings = this.buildings.findBuildings();
         
     	return buildings;
+    }
+
+    @Override
+    public Building getBuildingbyId(Building id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getBuildingbyId'");
     }
 }
