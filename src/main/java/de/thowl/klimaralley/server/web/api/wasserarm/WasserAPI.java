@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * RESTful API of the Wasserarmsatt game.
  *
- * This API is a stub and subject to change.
+ * Contains Methods to Update the Players gamestate
  *
  * @author Jonas Schwind
  * @version 0.6.0
@@ -110,6 +110,120 @@ public class WasserAPI {
 	}
 
 	/**
+	 * Gets water from given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'GET' \
+	 *   'localhost:8080/water/water' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: Bearer <TOKEN>'
+	 *
+	 * @return repsonse (code {@code 200}) with the water ammount
+	 */
+	@Operation(
+		summary = "Get water amount of user",
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Water in Liters",
+				content = @Content(
+					schema = @Schema(
+						implementation = WaterResponse.class),
+						examples = @ExampleObject(value = "{ 'message': 'Retrieved water ammount', 'water': 500 }")))
+		},
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Object> getWater(
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
+	) {
+
+		int water;
+		Claims claims;
+		ResponseBody body;
+
+		log.info("entering getScore (GET-Method: /water/water)");
+
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		water = 0;
+		if (authenticated(claims)) {
+			int userId = Integer.parseInt(claims.getSubject());
+			log.info("Authenticated user ID: {}", userId);
+			water = this.wassersvc.getWater(userId);
+		} else {
+			water = 25000;
+		}
+
+		body = new WaterResponse();
+		body.setMessage("Retrieved water amount");
+		((WaterResponse) body).setWater(water);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
+	}
+
+	/**
+	 * Increase water of given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'POST' \
+	 *   'localhost:8080/water/water?Amount=500' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: Bearer <TOKEN>'
+	 *
+	 * @return repsonse (code {@code 200}) with a confirmation message
+	 */
+	@Operation(
+		summary = "Increase water amount of user (Authentification required)",
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Water ammount increased",
+				content = @Content(
+					schema = @Schema(implementation = WaterResponse.class),
+					examples = @ExampleObject(value = "{ 'message': 'Increased water ammount', 'water': 500 }"))),
+			@ApiResponse(
+				responseCode = "401",
+				description = "User not authentificated",
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
+		},
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@RequestMapping(value = "/water", method = RequestMethod.PATCH, produces = "application/json")
+	public ResponseEntity<Object> setWater(
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
+		@RequestParam(name = "Amount") int amount
+	) {
+		int water;
+		Claims claims;
+		ResponseBody body;
+
+		log.info("entering getScore (PATCH-Method: /water/water)");
+
+		body = new ResponseBody();
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		water = 0;
+		if (authenticated(claims)) {
+			log.info("Authenticated user ID: {}", claims.getSubject());
+			long userId = Long.parseLong(claims.getSubject());
+			this.wassersvc.addWater(userId, amount);
+			water = this.wassersvc.getWater(userId);
+		} else {
+			log.error("Unauthorised call of PATCH-Method: /water/water");
+			body = new ResponseBody();
+			body.setMessage("Authorisation token needed, get one from /auth/login");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+		}
+
+		body = new WaterResponse();
+		body.setMessage("Increased water ammount");
+		((WaterResponse) body).setWater(water);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
+	}
+
+	/**
 	 * Calculates score bases on given items
 	 *
 	 * NOTE: The swagger ui generates a wrong curl, call with:
@@ -164,119 +278,5 @@ public class WasserAPI {
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 
-	/**
-	 * Gets water from given user
-	 *
-	 * NOTE: The swagger ui generates a wrong curl, call with:
-	 * curl -X 'GET' \
-	 *   'localhost:8080/water/water' \
-	 *   -H 'accept text/plain'
-	 *   -H 'Authorization: Bearer <TOKEN>'
-	 *  
-	 * @return repsonse (code {@code 200}) with the water ammount
-	 */
-	@Operation(
-		summary = "Get water amount of user",
-		responses = {
-			@ApiResponse(
-				responseCode = "200",
-				description = "Water in Liters",
-				content = @Content(
-					schema = @Schema(
-						implementation = WaterResponse.class), 
-						examples = @ExampleObject(value = "{ 'message': 'Retrieved water ammount', 'water': 500 }")))
-		},
-		security = @SecurityRequirement(name = "bearerAuth")
-	)
-	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Object> getWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
-	) {
-
-		int water;
-		Claims claims;
-		ResponseBody body;
-
-		log.info("entering getScore (GET-Method: /water/water)");
-
-		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
-
-		water = 0;
-		if (authenticated(claims)) {
-			int userId = Integer.parseInt(claims.getSubject());
-			log.info("Authenticated user ID: {}", userId);
-			water = this.wassersvc.getWater(userId);
-		} else {
-			water = 25000;
-		}
-
-		body = new WaterResponse();
-		body.setMessage("Retrieved water amount");
-		((WaterResponse) body).setWater(water);
-		return ResponseEntity.status(HttpStatus.OK).body(body);
-	}
-
-	/**
-	 * Increase water of given user
-	 *
-	 * NOTE: The swagger ui generates a wrong curl, call with:
-	 * curl -X 'POST' \
-	 *   'localhost:8080/water/water?Amount=500' \
-	 *   -H 'accept text/plain'
-	 *   -H 'Authorization: Bearer <TOKEN>'
-	 *  
-	 * @return repsonse (code {@code 200}) with a confirmation message
-	 */
-	@Operation(
-		summary = "Increase water amount of user (Authentification required)", 
-		responses = {
-			@ApiResponse(
-				responseCode = "200",
-				description = "Water ammount increased",
-				content = @Content(
-					schema = @Schema(implementation = WaterResponse.class), 
-					examples = @ExampleObject(value = "{ 'message': 'Increased water ammount', 'water': 500 }"))),
-			@ApiResponse(
-				responseCode = "401",
-				description = "User not authentificated",
-				content = @Content(
-					schema = @Schema(implementation = ResponseBody.class), 
-					examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
-		}, 
-		security = @SecurityRequirement(name = "bearerAuth")
-	)
-	@RequestMapping(value = "/water", method = RequestMethod.PATCH, produces = "application/json")
-	public ResponseEntity<Object> setWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
-		@RequestParam(name = "Amount") int amount
-	) {
-		int water;
-		Claims claims;
-		ResponseBody body;
-
-		log.info("entering getScore (PATCH-Method: /water/water)");
-
-		body = new ResponseBody();
-		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
-
-		water = 0;
-		if (authenticated(claims)) {
-			log.info("Authenticated user ID: {}", claims.getSubject());
-			long userId = Long.parseLong(claims.getSubject());
-			this.wassersvc.addWater(userId, amount);
-			water = this.wassersvc.getWater(userId);
-		} else {
-			log.error("Unauthorised call of PATCH-Method: /water/water");
-			body = new ResponseBody();
-			body.setMessage("Authorisation token needed, get one from /auth/login");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
-		}
-
-		body = new WaterResponse();
-		body.setMessage("Increased water ammount");
-		((WaterResponse) body).setWater(water);
-		return ResponseEntity.status(HttpStatus.OK).body(body);
-	}
-	
 }
 
