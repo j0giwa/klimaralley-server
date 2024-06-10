@@ -91,7 +91,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 		rng = new Random(unixtime);
 		val = rng.nextInt(101);
 
-		log.info("{}",val);
+		log.debug("Eatergen rng-value: {}",val);
 
 		if (val <= FRUTATRIAN_CHANCE) {
 			diet = EaterDiet.FRUTARIAN;
@@ -102,6 +102,8 @@ public class WasserarmServiceImpl implements WasserarmService {
 		} else {
 			diet = EaterDiet.NORMAL;
 		}
+
+		log.debug("eater-diet: {}", diet.toString());
 
 		return diet;
 	}

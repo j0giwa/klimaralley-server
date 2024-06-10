@@ -129,7 +129,7 @@ public class WasserAPI {
 				content= @Content(
 					schema = @Schema(implementation = GameScoreResponse.class),
 					examples = @ExampleObject(
-						value = "{ 'message': 'Good Job', 'score': 9500 }"))) 
+						value = "{ 'message': 'Its over 9000!!!', 'score': 9500 }"))) 
 			},
 		security = @SecurityRequirement(name = "bearerAuth")			
 	)
@@ -151,6 +151,7 @@ public class WasserAPI {
 		boolean scoreBoardMe;
 
 		log.info("entering getScore (GET-Method: /water/score)");
+
 
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
@@ -218,7 +219,7 @@ public class WasserAPI {
 	}
 
 	/**
-	 * Increase water of given user
+	i Increase water of given user
 	 *
 	 * NOTE: The swagger ui generates a wrong curl, call with:
 	 * curl -X 'POST' \
@@ -246,29 +247,28 @@ public class WasserAPI {
 		}, 
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
-	@RequestMapping(value = "/water", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/water", method = RequestMethod.PATCH, produces = "application/json")
 	public ResponseEntity<Object> setWater(
 		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
 		@RequestParam(name = "Amount") int amount
 	) {
-
 		int water;
 		Claims claims;
 		ResponseBody body;
 
-		log.info("entering getScore (POST-Method: /water/water)");
+		log.info("entering getScore (PATCH-Method: /water/water)");
 
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
 		water = 0;
 		if (authenticated(claims)) {
-			long userId = Long.parseLong(claims.getSubject());
 			log.info("Authenticated user ID: {}", claims.getSubject());
+			long userId = Long.parseLong(claims.getSubject());
 			this.wassersvc.addWater(userId, amount);
 			water = this.wassersvc.getWater(userId);
 		} else {
-
+			log.error("Unauthorised call of PATCH-Method: /water/water");
 			body = new ResponseBody();
 			body.setMessage("Authorisation token needed, get one from /auth/login");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
@@ -281,3 +281,4 @@ public class WasserAPI {
 	}
 	
 }
+

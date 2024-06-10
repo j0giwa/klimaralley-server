@@ -7,7 +7,6 @@
             <pattern>%yellow(%d{MM/dd HH:mm:ss.SSS}) [%highlight(%-5level)] in %cyan(%logger{5}@[%-4.30thread]) - %msg%n</pattern>
         </encoder>
     </appender>
-
     <jmxConfigurator />
 
     <root level="INFO">
