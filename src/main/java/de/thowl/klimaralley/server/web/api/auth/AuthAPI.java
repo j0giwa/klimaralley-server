@@ -163,7 +163,7 @@ public class AuthAPI {
 
 		if (!authsvc.validateEmail(schema.getEmail())) {
 			body.setMessage("Invalid Email");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body); 
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
 		} else if (!authsvc.validatePassword(schema.getPassword())) {
 			body.setMessage("Invalid Password");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);

@@ -1,5 +1,4 @@
 package de.thowl.klimaralley.server.web.schema.util;
-
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;

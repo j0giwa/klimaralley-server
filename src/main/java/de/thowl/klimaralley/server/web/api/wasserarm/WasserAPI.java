@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/water")
-@Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API")
+@Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API, Contains Methods to Update the Players gamestate")
 public class WasserAPI {
 
 	@Autowired
@@ -150,16 +150,16 @@ public class WasserAPI {
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
-
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 		scoreBoardMe = authenticated(claims);
+
+		// TODO: Implement Grading
 
 		if (scoreBoardMe) {
 			log.info("Authenticated user ID: " + claims.getSubject());
 		}
 
-		// TODO: Stub
 		body.setMessage("Not implemented");
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
