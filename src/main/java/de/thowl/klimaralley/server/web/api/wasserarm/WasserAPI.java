@@ -135,9 +135,7 @@ public class WasserAPI {
 	)
 	@RequestMapping(value = "/score", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> getScore(
-		@Parameter(
-			hidden = true
-		) @RequestHeader(name = "Authorization", required = false) String token,
+		@Parameter( hidden = true ) @RequestHeader(name = "Authorization", required = false) String token,
 		@Parameter(
         		description = "Wasserarm-satt game submission schema containing eaterId and items",
         		required = true,
@@ -219,7 +217,7 @@ public class WasserAPI {
 	}
 
 	/**
-	i Increase water of given user
+	 * Increase water of given user
 	 *
 	 * NOTE: The swagger ui generates a wrong curl, call with:
 	 * curl -X 'POST' \
