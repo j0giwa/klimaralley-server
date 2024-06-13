@@ -99,7 +99,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new DuplicateUserException("A User with this Username already exists");
 
 		usr = new User(firstname, lastname, username, email, encoder.encode(password));
+
 		usr.setWater(0);
+		usr.setWaterCoins(2000);
 
 		log.info("registering user {} with {}", username, email);
 		this.users.save(usr);

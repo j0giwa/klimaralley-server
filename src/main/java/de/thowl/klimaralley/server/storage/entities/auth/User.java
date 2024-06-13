@@ -50,5 +50,8 @@ public class User {
 
 	@NotNull
 	private int water; // For wasserarm-satt
+			   
+	@NotNull
+	private int waterCoins; // For wasserarm-satt
 
 }
