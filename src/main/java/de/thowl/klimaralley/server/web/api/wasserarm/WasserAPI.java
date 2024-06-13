@@ -277,5 +277,54 @@ public class WasserAPI {
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 
+	@Operation(
+		summary = "Get coin amount of user (Authentification required)",
+		responses = {
+			@ApiResponse(
+				responseCode = "200",
+				description = "Water ammount ",
+				content = @Content(
+					schema = @Schema(implementation = WaterResponse.class),
+					examples = @ExampleObject(value = "{ 'message': 'Here comes the money', 'waterCoins': 500 }"))),
+			@ApiResponse(
+				responseCode = "401",
+				description = "User not authentificated",
+				content = @Content(
+					schema = @Schema(implementation = ResponseBody.class),
+					examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
+		},
+		security = @SecurityRequirement(name = "bearerAuth")
+	)
+	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Object> setWater(
+		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
+	) {
+
+		int coins = 0;
+		Claims claims;
+		ResponseBody body;
+
+		log.info("entering getScore (PATCH-Method: /water/water)");
+
+		body = new ResponseBody();
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		if (authenticated(claims)) {
+			log.info("Authenticated user ID: {}", claims.getSubject());
+			long userId = Long.parseLong(claims.getSubject());
+			coins = this.wassersvc.getWater(userId);
+		} else {
+			log.error("Unauthorised call of PATCH-Method: /water/water");
+			body = new ResponseBody();
+			body.setMessage("Authorisation token needed, get one from /auth/login");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+		}
+
+		body = new WaterResponse();
+		body.setMessage("Increased water ammount");
+		((WaterResponse) body).setWater(coins);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
+	}
+
 }
 

@@ -46,4 +46,6 @@ public interface WasserarmService {
 	 *
 	 */
 	public void addWater(long id, int amount);
+
+	public int getCoins(long id);
 }

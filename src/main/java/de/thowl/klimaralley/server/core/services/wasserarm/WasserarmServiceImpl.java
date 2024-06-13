@@ -208,4 +208,16 @@ public class WasserarmServiceImpl implements WasserarmService {
 		user.setWater(user.getWater() + amount);
 	}
 
+
+	@Override
+	public int getCoins(long id) {
+
+		User user;
+
+		log.debug("entering getCoins");
+
+		user = this.users.findById(id).get();
+
+		return user.getWater();
+	}
 }
