@@ -138,7 +138,7 @@ public class WasserAPI {
 		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
 	) {
 
-		int water;
+		int water = 0;
 		Claims claims;
 		ResponseBody body;
 
@@ -146,7 +146,6 @@ public class WasserAPI {
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		water = 0;
 		if (authenticated(claims)) {
 			int userId = Integer.parseInt(claims.getSubject());
 			log.info("Authenticated user ID: {}", userId);
@@ -195,7 +194,8 @@ public class WasserAPI {
 		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
 		@RequestParam(name = "Amount") int amount
 	) {
-		int water;
+
+		int water = 0;
 		Claims claims;
 		ResponseBody body;
 
@@ -204,7 +204,6 @@ public class WasserAPI {
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		water = 0;
 		if (authenticated(claims)) {
 			log.info("Authenticated user ID: {}", claims.getSubject());
 			long userId = Long.parseLong(claims.getSubject());
