@@ -8,12 +8,12 @@ spring:
         size: 10
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/klimaralley
-    username: root
-    password: # no password
-    #url: ${SPRING_DATASOURCE_URL}
-    #username: ${SPRING_DATASOURCE_USERNAME}
-    #password: ${SPRING_DATASOURCE_PASSWORD}
+    #url: jdbc:mysql://localhost:3306/klimaralley
+    #username: root
+    #password: # no password
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
