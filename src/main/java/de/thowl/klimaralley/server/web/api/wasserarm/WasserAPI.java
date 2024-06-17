@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
@@ -17,6 +18,7 @@ import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameScoreResponse;
 import de.thowl.klimaralley.server.web.schema.wasserarm.WaterResponse;
+
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/water")
+@CrossOrigin(origins = "http://localhost")
 @Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API, Contains Methods to Update the Players gamestate")
 public class WasserAPI {
 
