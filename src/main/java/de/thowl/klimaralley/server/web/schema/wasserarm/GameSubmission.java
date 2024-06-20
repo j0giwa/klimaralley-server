@@ -1,5 +1,7 @@
 package de.thowl.klimaralley.server.web.schema.wasserarm;
 
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,5 +18,8 @@ public class GameSubmission {
 
 	@Schema(description = "ID of the Player's Eater", example = "115")
 	private long eaterId;
+
+	@Schema(description = "Players shopping cart")
+	private WasserarmShopItem[] items;
 
 }
