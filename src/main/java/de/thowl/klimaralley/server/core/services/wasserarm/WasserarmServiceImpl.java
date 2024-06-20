@@ -208,7 +208,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 		user.setWater(user.getWater() + amount);
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getCoins(long id) {
 
@@ -220,4 +222,31 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		return user.getWater();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getScore(long eaterId, WasserarmShopItem[] items) {
+	
+		int variety, matchedPrefs, score;
+		Eater eater;
+		WasserarmShopItem[] eaterPrefs;
+
+		log.debug("entering getScore");
+
+		score = 0;
+
+		variety = items.size;
+		eater = this.eaters.findById(eaterId);
+		eaterPrefs = eater.generatePreferences();
+
+		// TODO: count matched prefs
+
+		// TODO: calctate score
+		score = 0; 
+	
+		return score;
+	}
+
 }
