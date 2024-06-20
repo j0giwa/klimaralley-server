@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
+import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameScoreResponse;
@@ -50,6 +53,9 @@ public class WasserAPI {
 
 	@Autowired
 	private WasserarmService wassersvc;
+
+	@Autowired
+	private UserRepository users;
 
 	/**
 	 * Check if the user is authentifcated
@@ -259,24 +265,36 @@ public class WasserAPI {
             			schema = @Schema(implementation = GameSubmission.class))
     		) @RequestBody GameSubmission schema
 	) {
-
+		int score;
 		Claims claims;
 		ResponseBody body;
-		boolean scoreBoardMe;
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
-		body = new ResponseBody();
+		score = 0;
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
-		scoreBoardMe = authenticated(claims);
-
-		// TODO: Implement Grading
-
-		if (scoreBoardMe) {
-			log.info("Authenticated user ID: " + claims.getSubject());
+		
+		if (authenticated(claims)) {
+			User user;
+			user = this.users.findById(Long.parseLong(claims.getSubject())).get();
+			try {
+				score = this.wassersvc.getScore(schema.getEaterId(), schema.getItems(), user.getWaterCoins(), user.getWater());
+			} catch (InvalidGameException e) {
+				log.error("Invalid Wasserarm-satt Game");
+			}
+			// TODO: Implement scoreboard
+		} else {
+			try {
+				// TODO: Move magic numbers to conf file
+				score = this.wassersvc.getScore(schema.getEaterId(), schema.getItems(), 2000,25000);
+			} catch (InvalidGameException e) {
+				log.error("Invalid Wasserarm-satt Game");
+			}	
 		}
 
-		body.setMessage("Not implemented");
+		body = new GameScoreResponse();
+		body.setMessage("Good job");
+		((GameScoreResponse) body).setScore(score);;
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
 	}
 

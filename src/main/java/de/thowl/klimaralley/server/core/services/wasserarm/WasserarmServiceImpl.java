@@ -7,7 +7,9 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.ItemRepository;
+import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
 import de.thowl.klimaralley.server.core.expections.wasserarm.NoSuchEaterException;
+import de.thowl.klimaralley.server.core.utils.Counter;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.EaterDiet;
@@ -227,24 +229,35 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getScore(long eaterId, WasserarmShopItem[] items) {
+	public int getScore(long eaterId, WasserarmShopItem[] items, int playerCoins, int playerWater) throws InvalidGameException {
 	
-		int variety, matchedPrefs, score;
+		int score, variety, matchedPrefs, totalPrice;
 		Eater eater;
 		WasserarmShopItem[] eaterPrefs;
 
 		log.debug("entering getScore");
 
-		score = 0;
+		// NOTE: Playerwater and coins are not guarded, as they could be 0
+		if (eaterId <= 0 || items.length == 0) {
+			throw new InvalidGameException();
+		}
 
-		variety = items.size;
-		eater = this.eaters.findById(eaterId);
-		eaterPrefs = eater.generatePreferences();
+		try {
+			eater = this.eaters.findById(eaterId);
+		} catch (NoSuchEaterException e) {
+			throw new InvalidGameException();
+		}
 
-		// TODO: count matched prefs
+		variety = items.length;
+		eaterPrefs = eater.getPreferernces();
+		matchedPrefs = Counter.countDupliactes(items, eaterPrefs);
 
-		// TODO: calctate score
-		score = 0; 
+		totalPrice = 0;
+		for (WasserarmShopItem item : items) {
+			totalPrice += item.getPrice();
+		}
+
+		score = (int) ((matchedPrefs / 5) * (variety / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ; 
 	
 		return score;
 	}

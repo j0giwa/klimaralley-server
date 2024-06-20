@@ -3,6 +3,7 @@ package de.thowl.klimaralley.server.core.services.wasserarm;
 import java.util.List;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 
 /**
@@ -53,7 +54,17 @@ public interface WasserarmService {
 	public int getCoins(long id);
 	
 	/**
-	 *
+	 * 
+	 * @param eaterId     The players Eater
+	 * @param items       The players chosen Items
+	 * @param playerCoins The amount of coins the player has at their disposal
+	 * @param playerWater The amount of water (in litres) the player has at their
+	 *                    disposal
+	 * 
+	 * @return Calculated game score
+	 * 
+	 * @throws InvalidGameException when At least one param is {@code null} or
+	 *                              eaterId matches no {@link Eater}.
 	 */
-	public int getScore(long eaterId, WasserarmShopItem[] items);
+	public int getScore(long eaterId, WasserarmShopItem[] items, int playerCoins, int playerWater) throws InvalidGameException;
 }
