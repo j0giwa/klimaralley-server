@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
-import de.thowl.klimaralley.server.storage.entities.auth.User;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
-import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameScoreResponse;
@@ -53,9 +51,6 @@ public class WasserAPI {
 
 	@Autowired
 	private WasserarmService wassersvc;
-
-	@Autowired
-	private UserRepository users;
 
 	/**
 	 * Check if the user is authentifcated
@@ -265,35 +260,39 @@ public class WasserAPI {
             			schema = @Schema(implementation = GameSubmission.class))
     		) @RequestBody GameSubmission schema
 	) {
-		int score;
+		int score, itemc, water, coins;
 		Claims claims;
 		ResponseBody body;
+		WasserarmShopItem[] items;
+		boolean scoreboard;
 
-		log.info("entering getScore (GET-Method: /water/score)");
-
-		log.info("schema: {}", schema.toString());
+		log.info("entering getScore (POST-Method: /water/score)");
 
 		score = 0;
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 		
 		if (authenticated(claims)) {
-			User user;
-			user = this.users.findById(Long.parseLong(claims.getSubject())).get();
-			try {
-				WasserarmShopItem[] items = schema.getItems().toArray(new WasserarmShopItem[schema.getItems().size()]);				
-				score = this.wassersvc.getScore(schema.getEaterId(), items, user.getWaterCoins(), user.getWater());
-			} catch (InvalidGameException e) {
-				log.error("Invalid Wasserarm-satt Game");
-			}
-			// TODO: Implement scoreboard
+			long userId = Long.parseLong(claims.getSubject());
+			water = this.wassersvc.getWater(userId);
+			coins = this.wassersvc.getCoins(userId);
+			scoreboard = true;
 		} else {
-			try {
-				// TODO: Move magic numbers to conf file
-				WasserarmShopItem[] items = schema.getItems().toArray(new WasserarmShopItem[schema.getItems().size()]);
-				score = this.wassersvc.getScore(schema.getEaterId(), items, 2000, 25000);
-			} catch (InvalidGameException e) {
-				log.error("Invalid Wasserarm-satt Game");
-			}	
+			// TODO: Move magic numbers to conf file
+			water = 25000;
+			coins = 2000;
+			scoreboard = false;
+		}
+
+		try {
+			itemc = schema.getItems().size();
+			items = schema.getItems().toArray(new WasserarmShopItem[itemc]);
+			score = this.wassersvc.getScore(schema.getEaterId(), items, coins, water);
+		} catch (InvalidGameException e) {
+			log.error("Invalid Wasserarm-satt Game");
+		}
+
+		if (scoreboard) { 
+			// TODO implement scoreboard
 		}
 
 		body = new GameScoreResponse();
