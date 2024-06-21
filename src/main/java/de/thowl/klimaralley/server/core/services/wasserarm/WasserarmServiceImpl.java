@@ -238,13 +238,19 @@ public class WasserarmServiceImpl implements WasserarmService {
 		log.debug("entering getScore");
 
 		// NOTE: Playerwater and coins are not guarded, as they could be 0
-		if (eaterId <= 0 || items.length == 0) {
+		if (eaterId < 0) {
+			throw new InvalidGameException();
+		}
+
+		if (items == null || items.length == 0) {
+			log.error("FUCK 1");
 			throw new InvalidGameException();
 		}
 
 		try {
 			eater = this.eaters.findById(eaterId);
 		} catch (NoSuchEaterException e) {
+			log.error("FUCK 2");
 			throw new InvalidGameException();
 		}
 
@@ -257,7 +263,10 @@ public class WasserarmServiceImpl implements WasserarmService {
 			totalPrice += item.getPrice();
 		}
 
-		score = (int) ((matchedPrefs / 5) * (variety / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ; 
+		double epsilon = 1e-6; // HACK: Tiny constant to prevent division by zero
+		double calculation = (variety / 5.0) * (playerWater / (matchedPrefs + epsilon)) * Math.log((playerCoins - totalPrice) + 1);
+		//score = (int) ((variety / 5) * (matchedPrefs / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ; 
+		score = (int) Math.round(calculation);
 	
 		return score;
 	}

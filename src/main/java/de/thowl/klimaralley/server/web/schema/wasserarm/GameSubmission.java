@@ -2,6 +2,9 @@ package de.thowl.klimaralley.server.web.schema.wasserarm;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +23,6 @@ public class GameSubmission {
 	private long eaterId;
 
 	@Schema(description = "Players shopping cart")
-	private WasserarmShopItem[] items;
+	private List<WasserarmShopItem> items = new ArrayList<>();
 
 }

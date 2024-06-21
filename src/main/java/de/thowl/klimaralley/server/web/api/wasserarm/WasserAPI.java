@@ -271,6 +271,8 @@ public class WasserAPI {
 
 		log.info("entering getScore (GET-Method: /water/score)");
 
+		log.info("schema: {}", schema.toString());
+
 		score = 0;
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 		
@@ -278,7 +280,8 @@ public class WasserAPI {
 			User user;
 			user = this.users.findById(Long.parseLong(claims.getSubject())).get();
 			try {
-				score = this.wassersvc.getScore(schema.getEaterId(), schema.getItems(), user.getWaterCoins(), user.getWater());
+				WasserarmShopItem[] items = schema.getItems().toArray(new WasserarmShopItem[schema.getItems().size()]);				
+				score = this.wassersvc.getScore(schema.getEaterId(), items, user.getWaterCoins(), user.getWater());
 			} catch (InvalidGameException e) {
 				log.error("Invalid Wasserarm-satt Game");
 			}
@@ -286,7 +289,8 @@ public class WasserAPI {
 		} else {
 			try {
 				// TODO: Move magic numbers to conf file
-				score = this.wassersvc.getScore(schema.getEaterId(), schema.getItems(), 2000,25000);
+				WasserarmShopItem[] items = schema.getItems().toArray(new WasserarmShopItem[schema.getItems().size()]);
+				score = this.wassersvc.getScore(schema.getEaterId(), items, 2000, 25000);
 			} catch (InvalidGameException e) {
 				log.error("Invalid Wasserarm-satt Game");
 			}	
@@ -295,7 +299,7 @@ public class WasserAPI {
 		body = new GameScoreResponse();
 		body.setMessage("Good job");
 		((GameScoreResponse) body).setScore(score);;
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(body);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
 	@Operation(
