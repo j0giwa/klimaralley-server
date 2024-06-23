@@ -1,5 +1,6 @@
 package de.thowl.klimaralley.server.core.services.wasserarm;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Random;
 
@@ -47,11 +48,27 @@ public class WasserarmServiceImpl implements WasserarmService {
 	@Autowired
 	private UserRepository users;
 
+	/**
+	 * Base64-encodes the Icon of the {@link WasserarmShopItem}
+	 * 
+	 * @param items A list of {@link WasserarmShopItem}s
+	 * @return A list of {@link WasserarmShopItem}s with encoded attachments
+	 */
+	private List<WasserarmShopItem> encodeItems(List<WasserarmShopItem> items) {
+		for (WasserarmShopItem item : items) {
+			if(item.getWebp() == null){ 
+				continue;
+			}
+			item.setIcon(Base64.getEncoder().encodeToString(item.getWebp()));
+		}
+		return items;
+	}
+
 	public List<WasserarmShopItem> getAll() {
 
 		log.debug("entering getAll");
 
-		return wasserarmShopItems.findAll();
+		return encodeItems(this.wasserarmShopItems.findAll());
 	}
 
 	/**
