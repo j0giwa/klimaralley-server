@@ -57,6 +57,10 @@ jobs:
       run: java -jar target/klimaralley.server-*.jar &
       if: steps.build_step.conclusion == 'success'
       id: start_application
+      env:
+        SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/klimaralley
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: ""
 
     - name: Wait for application to start
       run: |
