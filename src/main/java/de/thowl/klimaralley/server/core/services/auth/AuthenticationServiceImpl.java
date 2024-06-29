@@ -85,8 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @throws DuplicateUserException
 	 */
 	@Override
-	public void register(String firstname, String lastname, String username,
-			String email, String password) throws DuplicateUserException {
+	public void register(String username, String email, String password) throws DuplicateUserException {
 
 		User usr;
 
@@ -98,7 +97,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (this.users.findByUsername(username) != null)
 			throw new DuplicateUserException("A User with this Username already exists");
 
-		usr = new User(firstname, lastname, username, email, encoder.encode(password));
+		usr = new User(username, email, encoder.encode(password));
 
 		usr.setWater(0);
 		usr.setWaterCoins(2000);
@@ -111,8 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateUser(long id, String firstname, String lastname, String username,
-			String email, String password) throws NoSuchUserException {
+	public void updateUser(long id, String username, String email, String password) throws NoSuchUserException {
 
 		User user;
 
@@ -124,8 +122,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		// update the user object in database
 		user.setUsername(username);
 		user.setEmail(email);
-		user.setFirstname(firstname);
-		user.setLastname(lastname);
 		user.setPassword(encoder.encode(password));
 
 		this.users.save(user);

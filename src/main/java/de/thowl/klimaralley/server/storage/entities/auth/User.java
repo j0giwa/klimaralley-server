@@ -30,14 +30,6 @@ public class User {
 
 	@NotNull
 	@NonNull
-	private String firstname;
-
-	@NotNull
-	@NonNull
-	private String lastname;
-
-	@NotNull
-	@NonNull
 	private String username;
 
 	@NotNull

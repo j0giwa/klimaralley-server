@@ -60,14 +60,11 @@ public interface AuthenticationService {
 	/**
 	 * Registers a new user
 	 * 
-	 * @param firstname The First Name of the user
-	 * @param lastname  The Last Name of the user
 	 * @param username  The username of the user
 	 * @param email     The E-Mail address of the user
 	 * @param password  The password of the user
 	 */
-	public void register(String firstname, String lastname, String username, String email, String password)
-			throws DuplicateUserException;
+	public void register(String username, String email, String password) throws DuplicateUserException;
 
 	/**
 	 * Update the userinformation {@link User} in the Database.
@@ -82,8 +79,7 @@ public interface AuthenticationService {
 	 * @throws NoSuchUserException when the given id does not belong to an existing
 	 *                           {@link User}.
 	 */
-	public void updateUser(long id, String firstname, String lastname, String username, String email, String password)
-			throws NoSuchUserException;
+	public void updateUser(long id, String username, String email, String password) throws NoSuchUserException;
 
 	/**
 	 * Performs a login action and stores an active {@link Session} in the Database.

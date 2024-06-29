@@ -32,8 +32,6 @@ public class TestTokenizer {
 
 		user = new User();
 		user.setId(1);
-		user.setFirstname("test");
-		user.setLastname("user");
 		user.setUsername("testuser");
 		user.setEmail("user@test.org");
 		user.setPassword("$2a$15$D3zQTzUx12LgCOHWOH8H4eSXbZ/lhO.l46wpR8vrA6qZ/uhOct..W");

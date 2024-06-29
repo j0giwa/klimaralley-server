@@ -8,12 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "User Registration", description = "Schema for user registration")
 public class RegisterSchema {
 
-    @Schema(description = "User's first name", example = "Joe")
-    private String firstname;
-
-    @Schema(description = "User's last name", example = "Shmoe")
-    private String lastname;
-
     @Schema(description = "Username for logging in", example = "joe_shmoe")
     private String username;
 

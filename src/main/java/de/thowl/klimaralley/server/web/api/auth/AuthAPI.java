@@ -173,8 +173,7 @@ public class AuthAPI {
 		}
 
 		try {
-			this.authsvc.register(schema.getFirstname(), schema.getLastname(), schema.getUsername(),
-					schema.getEmail(), schema.getPassword());
+			this.authsvc.register(schema.getUsername(),schema.getEmail(), schema.getPassword());
 		} catch (DuplicateUserException e) {
 			body.setMessage("User already exists");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
