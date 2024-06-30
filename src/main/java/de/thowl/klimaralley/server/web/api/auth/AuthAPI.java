@@ -15,6 +15,7 @@ import de.thowl.klimaralley.server.web.schema.auth.AuthentificationResponse;
 import de.thowl.klimaralley.server.web.schema.auth.LoginSchema;
 import de.thowl.klimaralley.server.web.schema.auth.RegisterSchema;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
