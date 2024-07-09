@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
+import de.thowl.klimaralley.server.core.services.score.ScoreboardService;
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
+import de.thowl.klimaralley.server.storage.entities.score.Game;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
@@ -51,6 +53,9 @@ public class WasserAPI {
 
 	@Autowired
 	private WasserarmService wassersvc;
+
+	@Autowired
+	private ScoreboardService scoreboardsvc;
 
 	/**
 	 * Check if the user is authentifcated
@@ -260,6 +265,7 @@ public class WasserAPI {
             			schema = @Schema(implementation = GameSubmission.class))
     		) @RequestBody GameSubmission schema
 	) {
+		long userId;
 		int score, itemc, water, coins;
 		Claims claims;
 		ResponseBody body;
@@ -268,11 +274,14 @@ public class WasserAPI {
 
 		log.info("entering getScore (POST-Method: /water/score)");
 
+		userId = 0; // HACK: Dafault value to satisfy compiler
 		score = 0;
+		scoreboard = false;
+		
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 		
 		if (authenticated(claims)) {
-			long userId = Long.parseLong(claims.getSubject());
+			userId = Long.parseLong(claims.getSubject());
 			water = this.wassersvc.getWater(userId);
 			coins = this.wassersvc.getCoins(userId);
 			scoreboard = true;
@@ -280,7 +289,6 @@ public class WasserAPI {
 			// TODO: Move magic numbers to conf file
 			water = 25000;
 			coins = 2000;
-			scoreboard = false;
 		}
 
 		try {
@@ -292,7 +300,7 @@ public class WasserAPI {
 		}
 
 		if (scoreboard) { 
-			// TODO implement scoreboard
+			this.scoreboardsvc.addEntry(userId, score, Game.WASSERARM);
 		}
 
 		body = new GameScoreResponse();

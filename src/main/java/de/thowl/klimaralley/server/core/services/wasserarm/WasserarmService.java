@@ -67,4 +67,5 @@ public interface WasserarmService {
 	 *                              eaterId matches no {@link Eater}.
 	 */
 	public int getScore(long eaterId, WasserarmShopItem[] items, int playerCoins, int playerWater) throws InvalidGameException;
+
 }

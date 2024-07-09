@@ -260,14 +260,12 @@ public class WasserarmServiceImpl implements WasserarmService {
 		}
 
 		if (items == null || items.length == 0) {
-			log.error("FUCK 1");
 			throw new InvalidGameException();
 		}
 
 		try {
 			eater = this.eaters.findById(eaterId);
 		} catch (NoSuchEaterException e) {
-			log.error("FUCK 2");
 			throw new InvalidGameException();
 		}
 
@@ -287,5 +285,4 @@ public class WasserarmServiceImpl implements WasserarmService {
 	
 		return score;
 	}
-
 }
