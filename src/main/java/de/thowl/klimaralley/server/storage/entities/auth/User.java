@@ -1,5 +1,7 @@
 package de.thowl.klimaralley.server.storage.entities.auth;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "Users")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class User implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +44,7 @@ public class User {
 
 	@NotNull
 	private int water; // For wasserarm-satt
-			   
+
 	@NotNull
 	private int waterCoins; // For wasserarm-satt
 
