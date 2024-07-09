@@ -225,6 +225,8 @@ public class WasserarmServiceImpl implements WasserarmService {
 		user = this.users.findById(id).get();
 
 		user.setWater(user.getWater() + amount);
+
+		this.users.save(user);
 	}
 
 	/**
