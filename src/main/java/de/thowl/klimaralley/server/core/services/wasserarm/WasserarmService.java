@@ -38,19 +38,29 @@ public interface WasserarmService {
          */
         public Eater getEater(long id);
 
-	/**
-	 *
-	 */
+        /**
+         * Gets the Water with the given id
+         * 
+         * @param id Id of the eater
+         * @return Water of the {@link User} with the given id 
+         */
 	public int getWater(long id);
 
-	/**
-	 *
-	 */
+        /**
+         * Add the Water with to the {@link User}
+         * {@see Eater}
+         * 
+         * @param id Id of the eater
+         * @param amount of water to add
+         */
 	public void addWater(long id, int amount);
 
-	/**
-	 *
-	 */
+        /**
+         * Gets amount of Coins for the {@link User} with the given id
+         * 
+         * @param id Id of the eater
+         * @return Water of the {@link User} with the given id 
+         */
 	public int getCoins(long id);
 	
 	/**
@@ -67,5 +77,4 @@ public interface WasserarmService {
 	 *                              eaterId matches no {@link Eater}.
 	 */
 	public int getScore(long eaterId, WasserarmShopItem[] items, int playerCoins, int playerWater) throws InvalidGameException;
-
 }

@@ -64,6 +64,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return items;
 	}
 
+        /**
+         * {@inheritDoc}
+         */
 	public List<WasserarmShopItem> getAll() {
 
 		log.debug("entering getAll");
