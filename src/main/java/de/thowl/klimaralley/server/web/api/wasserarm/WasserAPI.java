@@ -74,11 +74,11 @@ public class WasserAPI {
 	 * Get all shop items from the Database
 	 *
 	 * curl -X 'GET' 'http://localhost:8080/water/items'
-	 * 
+	 *
 	 * @return {@link WasserarmShopItem}[] (code {@code 200 OK})
 	 */
 	@Operation(
-		summary = "Retrieve all Wasserarm-satt shop items", 
+		summary = "Retrieve all Wasserarm-satt shop items",
 		responses = {
 			@ApiResponse(
 				responseCode = "200",
@@ -95,7 +95,7 @@ public class WasserAPI {
 	 * Retrieves a {@link Eater} to serve.
 	 *
 	 * curl -X 'GET' 'http://localhost:8080/water/eater'
-	 * 
+	 *
 	 * @return repsonse (code {@code 200}) with all shop items as JSON
 	 */
 	@Operation(
@@ -108,7 +108,7 @@ public class WasserAPI {
 	})
 	@RequestMapping(value = "/eater", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getEater() {
-		
+
 		Eater eater;
 
 		log.info("entering getAllItems (GET-Method: /water/eater)");
@@ -239,11 +239,11 @@ public class WasserAPI {
 	 *   'localhost:8080/water/score' \
 	 *   -H 'accept text/plain'
 	 *   -H 'Authorization: Bearer <TOKEN>'
-	 *  
+	 *
 	 * @return repsonse (code {@code 200}) with the calculated score
 	 */
 	@Operation(
-		summary = "Retrieves game score based on items", 
+		summary = "Retrieves game score based on items",
 		responses = {
 			@ApiResponse(
 				responseCode="501",
@@ -251,9 +251,9 @@ public class WasserAPI {
 				content= @Content(
 					schema = @Schema(implementation = GameScoreResponse.class),
 					examples = @ExampleObject(
-						value = "{ 'message': 'Its over 9000!!!', 'score': 9500 }"))) 
+						value = "{ 'message': 'Its over 9000!!!', 'score': 9500 }")))
 			},
-		security = @SecurityRequirement(name = "bearerAuth")			
+		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/score", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> getScore(
@@ -274,12 +274,12 @@ public class WasserAPI {
 
 		log.info("entering getScore (POST-Method: /water/score)");
 
-		userId = 0; // HACK: Dafault value to satisfy compiler
+		userId = 0; //HACK: Dafault value to satisfy compiler
 		score = 0;
 		scoreboard = false;
-		
+
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
-		
+
 		if (authenticated(claims)) {
 			userId = Long.parseLong(claims.getSubject());
 			water = this.wassersvc.getWater(userId);
@@ -299,7 +299,7 @@ public class WasserAPI {
 			log.error("Invalid Wasserarm-satt Game");
 		}
 
-		if (scoreboard) { 
+		if (scoreboard) {
 			this.scoreboardsvc.addEntry(userId, score, Game.WASSERARM);
 		}
 
@@ -309,6 +309,17 @@ public class WasserAPI {
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
+	/**
+	 * Get coin amount of given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'POST' \
+	 *   'localhost:8080/water/water?Amount=500' \
+	 *   -H 'accept text/plain'
+	 *   -H 'Authorization: Bearer <TOKEN>'
+	 *
+	 * @return repsonse (code {@code 200}) with the coin amount
+	 */
 	@Operation(
 		summary = "Get coin amount of user (Authentification required)",
 		responses = {
@@ -329,7 +340,8 @@ public class WasserAPI {
 	)
 	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> setWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
+		@Parameter(hidden = true)
+        @RequestHeader(name = "Authorization", required = false) String token
 	) {
 
 		int coins = 0;
