@@ -144,9 +144,10 @@ public class WasserAPI {
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token
+		@Parameter(hidden = true)
+        @RequestHeader(name = "Authorization", required = false)
+        String token
 	) {
-
 		int water = 0;
 		Claims claims;
 		ResponseBody body;
@@ -200,10 +201,13 @@ public class WasserAPI {
 	)
 	@RequestMapping(value = "/water", method = RequestMethod.PATCH, produces = "application/json")
 	public ResponseEntity<Object> setWater(
-		@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token,
-		@RequestParam(name = "Amount") int amount
-	) {
+		@Parameter(hidden = true)
+        @RequestHeader(name = "Authorization", required = false)
+        String token,
 
+        @RequestParam(name = "Amount")
+        int amount
+	) {
 		int water = 0;
 		Claims claims;
 		ResponseBody body;
@@ -257,13 +261,16 @@ public class WasserAPI {
 	)
 	@RequestMapping(value = "/score", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> getScore(
-		@Parameter( hidden = true ) @RequestHeader(name = "Authorization", required = false) String token,
-		@Parameter(
+		@Parameter( hidden = true )
+        @RequestHeader(name = "Authorization", required = false)
+        String token,
+
+        @Parameter(
         		description = "Wasserarm-satt game submission schema containing eaterId and items",
         		required = true,
-        		content = @Content(
-            			schema = @Schema(implementation = GameSubmission.class))
-    		) @RequestBody GameSubmission schema
+        		content = @Content(schema = @Schema(implementation = GameSubmission.class)))
+        @RequestBody
+        GameSubmission schema
 	) {
 		long userId;
 		int score, itemc, water, coins;
@@ -341,7 +348,8 @@ public class WasserAPI {
 	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> setWater(
 		@Parameter(hidden = true)
-        @RequestHeader(name = "Authorization", required = false) String token
+        @RequestHeader(name = "Authorization", required = false)
+        String token
 	) {
 
 		int coins = 0;

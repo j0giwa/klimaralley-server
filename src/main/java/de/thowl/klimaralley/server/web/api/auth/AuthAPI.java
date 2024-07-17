@@ -53,14 +53,14 @@ public class AuthAPI {
 		summary = "Authenticate a user",
 		responses = {
 			@ApiResponse(
-				responseCode = "200", 
-				description = "Successful operation", 
+				responseCode = "200",
+				description = "Successful operation",
 				content= @Content(
 					schema = @Schema(implementation = AuthentificationResponse.class),
 					examples = @ExampleObject(
 						value = "{ 'message': 'Authentication successful', 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'}"))),
 			@ApiResponse(
-				responseCode = "401", 
+				responseCode = "401",
 				description = "Invalid credentials",
 				content= @Content(
 					schema = @Schema(implementation = ResponseBody.class),
@@ -71,12 +71,12 @@ public class AuthAPI {
 	public ResponseEntity<Object> doLogin(
 		@Parameter(
 			description = "User Login schema containing username and password",
-			required = true, 
-			content = @Content(
-				schema = @Schema(implementation = LoginSchema.class))
-		) @RequestBody LoginSchema schema
+			required = true,
+			content = @Content(schema = @Schema(implementation = LoginSchema.class)))
+        @RequestBody
+        LoginSchema schema
 	) {
-	
+
 		ResponseBody body;
 		String email, password, token;
 
@@ -115,7 +115,7 @@ public class AuthAPI {
 	 * </ul>
 	 *
 	 * @param schema {@link LoginSchema} contained in the resqeust
-	 * 
+	 *
 	 * @return {@code 200 OK} on Register,
 	 *         {@code 400 BAD REQUEST} on invalid credentials,
 	 *         {@code 500 INTERNAL SERVER ERROR} if the user exists.
@@ -148,12 +148,12 @@ public class AuthAPI {
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> doRegister(
 		@Parameter(
-        		description = "User Register schema containing username and password",
-        		required = true,
-        		content = @Content(
-            			schema = @Schema(implementation = RegisterSchema.class)
-        		)
-    		) @RequestBody RegisterSchema schema
+        	description = "User Register schema containing username and password",
+        	required = true,
+        	content = @Content(
+            	schema = @Schema(implementation = RegisterSchema.class)))
+        @RequestBody
+        RegisterSchema schema
 	) {
 
 		ResponseBody body;
@@ -183,5 +183,5 @@ public class AuthAPI {
 		body.setMessage("User registered");
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
-	
+
 }
