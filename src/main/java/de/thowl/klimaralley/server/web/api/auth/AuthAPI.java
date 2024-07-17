@@ -73,8 +73,8 @@ public class AuthAPI {
 			description = "User Login schema containing username and password",
 			required = true,
 			content = @Content(schema = @Schema(implementation = LoginSchema.class)))
-        @RequestBody
-        LoginSchema schema
+		@RequestBody
+		LoginSchema schema
 	) {
 
 		ResponseBody body;
@@ -148,12 +148,12 @@ public class AuthAPI {
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> doRegister(
 		@Parameter(
-        	description = "User Register schema containing username and password",
-        	required = true,
-        	content = @Content(
-            	schema = @Schema(implementation = RegisterSchema.class)))
-        @RequestBody
-        RegisterSchema schema
+		description = "User Register schema containing username and password",
+		required = true,
+		content = @Content(
+		schema = @Schema(implementation = RegisterSchema.class)))
+		@RequestBody
+		RegisterSchema schema
 	) {
 
 		ResponseBody body;
