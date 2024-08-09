@@ -132,6 +132,62 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return diet;
 	}
 
+	/**
+	 * Find an Instance of {@link WasserarmShopItem}, based on an {@link Eaters} diet.
+	 *
+	 * @param diet The {@link EaterDiet} of the {@link Eater}.
+	 * @return Array of prefered {@link WasserarmShopItem}s
+	 */
+	private WasserarmShopItem findWasserarmPrefItem(EaterDiet diet) {
+
+		WasserarmShopItem item;
+		List<WasserarmShopItem> items;
+		long unixtime;
+		Random rng;
+
+		log.debug("entering GenerateEater");
+
+		unixtime = System.currentTimeMillis() / 1000L;
+		rng = new Random(unixtime);
+		items = wasserarmShopItems.findAll();
+
+		item = null;
+
+		/*
+		 * FIXIT: This is some stupid ass code.
+		 * One change to the EaterDiets enum and the whole thing breaks.
+		 */
+		switch (diet) {
+			default:
+			case EaterDiet.NORMAL:
+				return items.get(rng.nextInt(items.size()));
+
+			case EaterDiet.VEGETARIAN:
+				while (true) {
+					item = items.get(rng.nextInt(items.size()));
+					if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
+							item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD)) {
+						continue;
+					}
+					return item;
+				}
+
+			case EaterDiet.VEGAN:
+				while (true) {
+					item = items.get(rng.nextInt(items.size()));
+					if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
+							item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD) ||
+							item.getType().equals(WasserarmShopItemType.DAIRY_FOODS)) {
+						continue;
+					}
+					return item;
+				}
+
+			//INFO: In this case the eater should not have preferernces.
+			case EaterDiet.FRUTARIAN:
+				return null;
+		}
+	}
 
 	/**
 	 * Generates an Array of {@link WasserarmShopItem}s that the {@link Eater} prefers, based on diet.
@@ -141,60 +197,14 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 */
 	private WasserarmShopItem[] generatePreferences(EaterDiet diet) {
 
-		WasserarmShopItem item;
-		List<WasserarmShopItem> items;
 		WasserarmShopItem[] prefs;
-		long unixtime;
-		Random rng;
 
 		log.debug("entering GenerateEater");
 
-		unixtime = System.currentTimeMillis() / 1000L;
-		rng = new Random(unixtime);
-		items = wasserarmShopItems.findAll();
 		prefs = new WasserarmShopItem[PREFS_SIZE];
 
 		for(int i = 0; i <= PREFS_SIZE - 1; i++) {
-			item = null;
-			boolean itemfound = false;
-
-			/*
-			 * FIXIT: This is some stupid ass code.
-			 * One change to the EaterDiets enum and the whole thing breaks.
-			 */
-			switch (diet) {
-				default:
-				case EaterDiet.NORMAL:
-					item = items.get(rng.nextInt(items.size()));
-					break;
-				case EaterDiet.VEGETARIAN:
-					while (!itemfound) {
-						item = items.get(rng.nextInt(items.size()));
-						if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
-								item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD)) {
-							continue;
-						}
-						itemfound = true;
-					}
-					break;
-				case EaterDiet.VEGAN:
-					while (!itemfound) {
-						item = items.get(rng.nextInt(items.size()));
-						if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
-								item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD) ||
-								item.getType().equals(WasserarmShopItemType.DAIRY_FOODS)) {
-							continue;
-						}
-						itemfound = true;
-					}
-					break;
-				//INFO: In this case the eater should not have preferernces.
-				case EaterDiet.FRUTARIAN:
-					continue;
-			}
-
-			prefs[i] = item;
-			itemfound = false;
+			prefs[i] = findWasserarmPrefItem(diet);
 		}
 
 		return prefs;
