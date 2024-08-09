@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
+import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItemType;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.EaterRepsoitory;
 import de.thowl.klimaralley.server.storage.repository.wasserarm.ItemRepository;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @author Jonas Schwind
  * @version 0.3.0
  */
@@ -50,13 +51,13 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 	/**
 	 * Base64-encodes the Icon of the {@link WasserarmShopItem}
-	 * 
+	 *
 	 * @param items A list of {@link WasserarmShopItem}s
 	 * @return A list of {@link WasserarmShopItem}s with encoded attachments
 	 */
 	private List<WasserarmShopItem> encodeItems(List<WasserarmShopItem> items) {
 		for (WasserarmShopItem item : items) {
-			if(item.getWebp() == null){ 
+			if(item.getWebp() == null){
 				continue;
 			}
 			item.setIcon(Base64.getEncoder().encodeToString(item.getWebp()));
@@ -79,7 +80,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 *
 	 *  @param generateSurname wether or not a surname is included
 	 *  @return Name
-	 */ 
+	 */
 	private String generateRandomName(boolean generateSurname){
 
 		Faker faker;
@@ -87,10 +88,10 @@ public class WasserarmServiceImpl implements WasserarmService {
 		log.debug("entering generateName");
 
 		faker = new Faker();
-		
+
 		if (generateSurname) {
 			return faker.name().firstName();
-		} 
+		}
 
 		return faker.name().name();
 	}
@@ -115,6 +116,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		log.debug("Eatergen rng-value: {}",val);
 
+		// BUG: Change the spawn weights and this stops working, but idfk.
 		if (val <= FRUTATRIAN_CHANCE) {
 			diet = EaterDiet.FRUTARIAN;
 		} else if (val <= VEGAN_CHANCE) {
@@ -132,46 +134,89 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 
 	/**
-	 * Generates an Array of {@link WasserarmShopItem}s that the {@link Eater} prefers.
+	 * Generates an Array of {@link WasserarmShopItem}s that the {@link Eater} prefers, based on diet.
 	 *
-	 * @return Array of prefered {@link WasserarmShopItem}s 
+	 * @param diet The {@link EaterDiet} of the {@link Eater}.
+	 * @return Array of prefered {@link WasserarmShopItem}s
 	 */
-	private WasserarmShopItem[] generatePreferences() {
+	private WasserarmShopItem[] generatePreferences(EaterDiet diet) {
 
+		WasserarmShopItem item;
 		List<WasserarmShopItem> items;
 		WasserarmShopItem[] prefs;
 		long unixtime;
 		Random rng;
 
 		log.debug("entering GenerateEater");
-		
+
 		unixtime = System.currentTimeMillis() / 1000L;
 		rng = new Random(unixtime);
 		items = wasserarmShopItems.findAll();
 		prefs = new WasserarmShopItem[PREFS_SIZE];
 
 		for(int i = 0; i <= PREFS_SIZE - 1; i++) {
-			prefs[i] = items.get(rng.nextInt(items.size()));
+			item = null;
+			boolean itemfound = false;
+
+			/*
+			 * FIXIT: This is some stupid ass code.
+			 * One change to the EaterDiets enum and the whole thing breaks.
+			 */
+			switch (diet) {
+				default:
+				case EaterDiet.NORMAL:
+					item = items.get(rng.nextInt(items.size()));
+					break;
+				case EaterDiet.VEGETARIAN:
+					while (!itemfound) {
+						item = items.get(rng.nextInt(items.size()));
+						if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
+								item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD)) {
+							continue;
+						}
+						itemfound = true;
+					}
+					break;
+				case EaterDiet.VEGAN:
+					while (!itemfound) {
+						item = items.get(rng.nextInt(items.size()));
+						if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
+								item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD) ||
+								item.getType().equals(WasserarmShopItemType.DAIRY_FOODS)) {
+							continue;
+						}
+						itemfound = true;
+					}
+					break;
+				//INFO: In this case the eater should not have preferernces.
+				case EaterDiet.FRUTARIAN:
+					continue;
+			}
+
+			prefs[i] = item;
+			itemfound = false;
 		}
 
 		return prefs;
-	} 
+	}
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	@Override
         public Eater generateEater() {
 
 		Eater eater;
+		EaterDiet diet;
 
 		log.debug("entering GenerateEater");
-		
+
 		eater = new Eater();
 		eater.setId(eaters.countAll());
 		eater.setName(generateRandomName(false));
-		eater.setDiet(generateDiet());
-		eater.setPreferernces(generatePreferences());
+		diet = generateDiet();
+		eater.setDiet(diet);
+		eater.setPreferernces(generatePreferences(diet));
 
 		log.info("storing Eater");
 		this.eaters.save(eater);
@@ -181,7 +226,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 	/**
 	 * {@inheritDoc}
-	 */ 
+	 */
 	@Override
 	public Eater getEater(long id) {
 
@@ -220,7 +265,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 */
 	@Override
 	public void addWater(long id, int amount) {
-	
+
 		User user;
 
 		log.debug("entering getEater");
@@ -252,7 +297,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 */
 	@Override
 	public int getScore(long eaterId, WasserarmShopItem[] items, int playerCoins, int playerWater) throws InvalidGameException {
-	
+
 		int score, variety, matchedPrefs, totalPrice;
 		Eater eater;
 		WasserarmShopItem[] eaterPrefs;
@@ -285,9 +330,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		double epsilon = 1e-6; // HACK: Tiny constant to prevent division by zero
 		double calculation = (variety / 5.0) * (playerWater / (matchedPrefs + epsilon)) * Math.log((playerCoins - totalPrice) + 1);
-		//score = (int) ((variety / 5) * (matchedPrefs / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ; 
+		//score = (int) ((variety / 5) * (matchedPrefs / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ;
 		score = (int) Math.round(calculation);
-	
+
 		return score;
 	}
 }
