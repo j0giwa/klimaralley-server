@@ -154,7 +154,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 		item = null;
 
 		/*
-		 * FIXIT: This is some stupid ass code.
+		 * SMELL: This is some stupid ass code.
 		 * One change to the EaterDiets enum and the whole thing breaks.
 		 */
 		switch (diet) {
@@ -183,7 +183,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 					return item;
 				}
 
-			//INFO: In this case the eater should not have preferernces.
+			// INFO: In this case the eater should not have preferernces.
 			case EaterDiet.FRUTARIAN:
 				return null;
 		}
