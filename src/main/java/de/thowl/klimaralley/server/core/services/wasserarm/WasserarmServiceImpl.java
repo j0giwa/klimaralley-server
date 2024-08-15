@@ -33,12 +33,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class WasserarmServiceImpl implements WasserarmService {
 
-	final int PREFS_SIZE = 3;
-
-	// Not real word values
+	/*
+	 * The spawn chances do not reflect real world statistics.
+	 *
+	 * BUG: Keep them in decenending order or it will break.
+	 * VEGETARIAN_CHANCE > VEGAN_CHANCE > FRUTATRIAN_CHANCE
+	 */
 	final int VEGETARIAN_CHANCE = 15;
 	final int VEGAN_CHANCE = 10;
 	final int FRUTATRIAN_CHANCE = 2;
+
+	final int PREFS_SIZE = 3;
 
 	@Autowired
 	private EaterRepsoitory eaters;
@@ -203,7 +208,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 				while (true) {
 					item = items.get(rng.nextInt(items.size()));
 					if (!isVegetarian(item)) {
-						continue;
+						continue; // YEET
 					}
 					return item;
 				}
@@ -212,7 +217,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 				while (true) {
 					item = items.get(rng.nextInt(items.size()));
 					if (!isVegan(item)) {
-						continue;
+						continue; // YEET
 					}
 					return item;
 				}
@@ -248,7 +253,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 * {@inheritDoc}
 	 */
 	@Override
-        public Eater generateEater() {
+    public Eater generateEater() {
 
 		Eater eater;
 		EaterDiet diet;
