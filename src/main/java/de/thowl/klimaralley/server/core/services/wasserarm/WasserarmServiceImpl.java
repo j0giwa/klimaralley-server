@@ -133,6 +133,43 @@ public class WasserarmServiceImpl implements WasserarmService {
 	}
 
 	/**
+	 * Checks if a {@link WasserarmShopItem} applys for a Vegetarian diet.
+	 *
+	 * @param item The {@link WasserarmShopItem} to Check.
+	 * @return {@code true} if the {@link WasserarmShopItem} applys, else return {@code false}.
+	 */
+	private boolean isVegetarian(WasserarmShopItem item){
+		if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY)) {
+			return false;
+		}
+
+		if (item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if a {@link WasserarmShopItem} applys for a Vegan diet.
+	 *
+	 * @param item The {@link WasserarmShopItem} to Check.
+	 * @return {@code true} if the {@link WasserarmShopItem} applys, else return {@code false}.
+	 */
+	private boolean isVegan(WasserarmShopItem item) {
+
+		// A Vegan is just a vagetarian with extra steps
+		if (!isVegetarian(item)) {
+			return false;
+		}
+
+		if (item.getType().equals(WasserarmShopItemType.DAIRY_FOODS)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Find an Instance of {@link WasserarmShopItem}, based on an {@link Eaters} diet.
 	 *
 	 * @param diet The {@link EaterDiet} of the {@link Eater}.
@@ -165,8 +202,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 			case EaterDiet.VEGETARIAN:
 				while (true) {
 					item = items.get(rng.nextInt(items.size()));
-					if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
-							item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD)) {
+					if (!isVegetarian(item)) {
 						continue;
 					}
 					return item;
@@ -175,16 +211,14 @@ public class WasserarmServiceImpl implements WasserarmService {
 			case EaterDiet.VEGAN:
 				while (true) {
 					item = items.get(rng.nextInt(items.size()));
-					if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY) ||
-							item.getType().equals(WasserarmShopItemType.FISH_AND_SEAFOOD) ||
-							item.getType().equals(WasserarmShopItemType.DAIRY_FOODS)) {
+					if (!isVegan(item)) {
 						continue;
 					}
 					return item;
 				}
 
-			// INFO: In this case the eater should not have preferernces.
 			case EaterDiet.FRUTARIAN:
+				// In this case the eater should not have preferernces.
 				return null;
 		}
 	}
@@ -340,7 +374,6 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		double epsilon = 1e-6; // HACK: Tiny constant to prevent division by zero
 		double calculation = (variety / 5.0) * (playerWater / (matchedPrefs + epsilon)) * Math.log((playerCoins - totalPrice) + 1);
-		//score = (int) ((variety / 5) * (matchedPrefs / playerWater) * Math.log((playerCoins - totalPrice) + 1)) ;
 		score = (int) Math.round(calculation);
 
 		return score;
