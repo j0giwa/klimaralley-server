@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import de.thowl.klimaralley.server.core.expections.wasserarm.InvalidGameException;
 import de.thowl.klimaralley.server.core.services.score.ScoreboardService;
 import de.thowl.klimaralley.server.core.services.wasserarm.WasserarmService;
+import de.thowl.klimaralley.server.core.services.auth.AuthenticationService;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.entities.score.Game;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
@@ -51,24 +52,15 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Wasserarmsatt", description = "Wasserarmsatt API, Contains Methods to Update the Players gamestate")
 public class WasserAPI {
 
+
+	@Autowired
+	private AuthenticationService authsvc;
+
 	@Autowired
 	private WasserarmService wassersvc;
 
 	@Autowired
 	private ScoreboardService scoreboardsvc;
-
-	/**
-	 * Check if the user is authentifcated
-	 *
-	 * @param claims the claims of the token (if any)
-	 * @return {@code true} if there are claims
-	 */
-	private boolean authenticated(Claims claims) {
-		if (claims != null) {
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * Get all shop items from the Database
@@ -156,7 +148,7 @@ public class WasserAPI {
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (authenticated(claims)) {
+		if (this.authsvc.isValid(token)) {
 			int userId = Integer.parseInt(claims.getSubject());
 			log.info("Authenticated user ID: {}", userId);
 			water = this.wassersvc.getWater(userId);
@@ -217,7 +209,7 @@ public class WasserAPI {
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (authenticated(claims)) {
+		if (this.authsvc.isValid(token)) {
 			log.info("Authenticated user ID: {}", claims.getSubject());
 			long userId = Long.parseLong(claims.getSubject());
 			this.wassersvc.addWater(userId, amount);
@@ -287,7 +279,7 @@ public class WasserAPI {
 
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (authenticated(claims)) {
+		if (this.authsvc.isValid(token)) {
 			userId = Long.parseLong(claims.getSubject());
 			water = this.wassersvc.getWater(userId);
 			coins = this.wassersvc.getCoins(userId);
@@ -361,7 +353,7 @@ public class WasserAPI {
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
 
-		if (authenticated(claims)) {
+		if (this.authsvc.isValid(token)) {
 			log.info("Authenticated user ID: {}", claims.getSubject());
 			long userId = Long.parseLong(claims.getSubject());
 			coins = this.wassersvc.getWater(userId);

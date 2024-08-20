@@ -9,13 +9,16 @@ import de.thowl.klimaralley.server.core.expections.auth.NoSuchUserException;
 import de.thowl.klimaralley.server.core.utils.auth.Tokenizer;
 import de.thowl.klimaralley.server.storage.repository.auth.UserRepository;
 import de.thowl.klimaralley.server.storage.entities.auth.User;
+
+import io.jsonwebtoken.Claims;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Implementaion of the {@link AuthenticationService} interface
- * 
+ *
  * @author Jonas Schwind
  * @version 1.2.0
  */
@@ -28,10 +31,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Autowired
 	private UserRepository users;
-	
+
 	public AuthenticationServiceImpl() {
 		this.encoder = new BCryptPasswordEncoder(BCRYPT_COST);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isValid(String jwt) {
+
+		Claims claims;
+
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(jwt));
+
+		if (claims == null) {
+			return false;
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -81,7 +102,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws DuplicateUserException
 	 */
 	@Override

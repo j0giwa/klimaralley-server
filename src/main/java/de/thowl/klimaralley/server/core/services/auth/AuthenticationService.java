@@ -7,11 +7,18 @@ import de.thowl.klimaralley.server.storage.entities.auth.User;
 
 /**
  * Provides User Authentifaciton/Management funtionalitys
- * 
+ *
  * @author Jonas Schwind
  * @version 1.2.0
  */
 public interface AuthenticationService {
+
+
+	/**
+	 * Validates a JWT
+	 */
+	public boolean isValid(String jwt);
+
 
 	/**
 	 * Checks if the input matches the format of an E-Mail address.
@@ -59,7 +66,7 @@ public interface AuthenticationService {
 
 	/**
 	 * Registers a new user
-	 * 
+	 *
 	 * @param username  The username of the user
 	 * @param email     The E-Mail address of the user
 	 * @param password  The password of the user
@@ -68,14 +75,12 @@ public interface AuthenticationService {
 
 	/**
 	 * Update the userinformation {@link User} in the Database.
-	 * 
+	 *
 	 * @param id        The id of the {@link User} to edit.
-	 * @param firstname The new first name of the {@link User}.
-	 * @param lastname  The new last name of the {@link User}.
 	 * @param username  The new username of the {@link User}.
 	 * @param email     The new E-Mail address of the {@link User}.
 	 * @param password  The new password of the {@link User}.
-	 * 
+	 *
 	 * @throws NoSuchUserException when the given id does not belong to an existing
 	 *                           {@link User}.
 	 */
@@ -85,7 +90,7 @@ public interface AuthenticationService {
 	 * Performs a login action and stores an active {@link Session} in the Database.
 	 * <p>
 	 * The Session expires 30 Minutes after its creation / Validation.
-	 * 
+	 *
 	 * @param email    The E-Mail address of the user
 	 * @param password The password of the user
 	 *

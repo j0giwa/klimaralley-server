@@ -138,10 +138,10 @@ public class WasserarmServiceImpl implements WasserarmService {
 	}
 
 	/**
-	 * Checks if a {@link WasserarmShopItem} applys for a Vegetarian diet.
+	 * Checks if a {@link WasserarmShopItem} is suitable for a vegetarian.
 	 *
 	 * @param item The {@link WasserarmShopItem} to Check.
-	 * @return {@code true} if the {@link WasserarmShopItem} applys, else return {@code false}.
+	 * @return {@code true} if the {@link WasserarmShopItem} is suitable.
 	 */
 	private boolean isVegetarian(WasserarmShopItem item){
 		if (item.getType().equals(WasserarmShopItemType.MEAT_AND_POULTRY)) {
@@ -155,10 +155,10 @@ public class WasserarmServiceImpl implements WasserarmService {
 	}
 
 	/**
-	 * Checks if a {@link WasserarmShopItem} applys for a Vegan diet.
+	 * Checks if a {@link WasserarmShopItem} suitable for a vegan.
 	 *
 	 * @param item The {@link WasserarmShopItem} to Check.
-	 * @return {@code true} if the {@link WasserarmShopItem} applys, else return {@code false}.
+	 * @return {@code true} if the {@link WasserarmShopItem} is suitable.
 	 */
 	private boolean isVegan(WasserarmShopItem item) {
 
@@ -175,7 +175,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	}
 
 	/**
-	 * Find an Instance of {@link WasserarmShopItem}, based on an {@link Eaters} diet.
+	 * Find an {@link WasserarmShopItem}, based on an {@link Eaters} diet.
 	 *
 	 * @param diet The {@link EaterDiet} of the {@link Eater}.
 	 * @return Array of prefered {@link WasserarmShopItem}s
