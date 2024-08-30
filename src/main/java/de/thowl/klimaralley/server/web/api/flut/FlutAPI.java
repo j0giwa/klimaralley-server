@@ -22,15 +22,61 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import de.thowl.klimaralley.server.storage.entities.flut.FlutMaxLevel;
 
-/**
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/flut")
+public class FlutAPI {
+
+
+    @Autowired
+    private FlutService flutService;
+
+    @GetMapping("/{userId}")
+    public Integer getFlutMaxLevel(@PathVariable Long userId) {
+        return flutService.getFlutMaxLevelByUserId(userId);
+    }
+
+    @PostMapping
+    public FlutMaxLevel saveFlutMaxLevel(@RequestBody FlutRequest request) {
+        return flutService.saveFlutMaxLevel(request.getUserId(), request.getValue());
+    }
+
+    public static class FlutRequest {
+        private Long userId;
+        private Integer value;
+
+        // Getter und Setter
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public void setValue(Integer value) {
+            this.value = value;
+        }
+    }
+}
+
+/* 
+**
  * RESTful API of the Wasserarm satt game.
  *
  * This API is a stub and subject to change.
  *
  * @author Cedric Bourgeois
  * @version 0.1.0
- */
+ *
 @Slf4j
 @RestController
 @RequestMapping("/flut")
@@ -39,25 +85,9 @@ public class FlutAPI {
     @Autowired
     private FlutService flutsvc;
 
-    /**
-	 * Healthcheck method to 'ping' the API
-	 *
-	 * @return status code {@code 200}
-	 */
-	@Operation(summary = "Healthcheck")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Can be used to check if api is up"),
-	})
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseEntity<Object> healthCheck() {
-		log.info("entering getTask (GET-Method: /water/get)");
-		// TODO: Stub
-		return ResponseEntity.status(HttpStatus.OK).body(null);
-	}
     
-    /**
-     * 
-     */
+    
+    
     @Operation(summary = "get Buildings")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
@@ -76,4 +106,6 @@ public class FlutAPI {
 
 		return ResponseEntity.status(HttpStatus.OK).body(buildings);
 	}
+	
 }
+*/

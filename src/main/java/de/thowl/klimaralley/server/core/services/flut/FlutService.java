@@ -1,14 +1,13 @@
+// FlutService.java
 package de.thowl.klimaralley.server.core.services.flut;
 
+import de.thowl.klimaralley.server.storage.entities.flut.FlutMaxLevel;
+import de.thowl.klimaralley.server.storage.entities.flut.Building;
 import java.util.ArrayList;
 
-import de.thowl.klimaralley.server.storage.entities.flut.Building;
-
-// import com.thowl.Flut.storage.entities.Building;
-// import com.thowl.Flut.storage.entities.Map;
-
 public interface FlutService {
-    public Building getBuildingbyId(Building id); //Wenn das Objekt aufgelevelt wird dann einfach nächste Id übergebens
-    public ArrayList<Building> getBuildings();
-
+    ArrayList<Building> getBuildings();
+    Building getBuildingbyId(Building id);
+    Integer getFlutMaxLevelByUserId(Long userId); // NEU: Methode zum Abrufen des FlutMaxLevel basierend auf userId
+    FlutMaxLevel saveFlutMaxLevel(Long userId, Integer value); // NEU: Methode zum Speichern des FlutMaxLevel basierend auf userId
 }
