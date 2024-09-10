@@ -1,6 +1,7 @@
 package de.thowl.klimaralley.server.core.services.wasserarm;
 
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +46,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 	final int PREFS_SIZE = 3;
 
+	final long UNIXTME = System.currentTimeMillis() / 1000L;
+	final Random RNG = new Random(UNIXTME);
+
 	@Autowired
 	private EaterRepsoitory eaters;
 
@@ -70,9 +74,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 		return items;
 	}
 
-        /**
-         * {@inheritDoc}
-         */
+	/**
+	 * {@inheritDoc}
+     */
 	public List<WasserarmShopItem> getAll() {
 
 		log.debug("entering getAll");
@@ -109,17 +113,11 @@ public class WasserarmServiceImpl implements WasserarmService {
 	private EaterDiet generateDiet() {
 
 		EaterDiet diet;
-		long unixtime;
 		int val;
-		Random rng;
 
 		log.debug("entering generateDiet");
 
-		unixtime = System.currentTimeMillis() / 1000L;
-		rng = new Random(unixtime);
-		val = rng.nextInt(101);
-
-		log.debug("Eatergen rng-value: {}",val);
+		val = RNG.nextInt(101);
 
 		// BUG: Change the spawn weights and this stops working, but idfk.
 		if (val <= FRUTATRIAN_CHANCE) {
@@ -184,13 +182,9 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		WasserarmShopItem item;
 		List<WasserarmShopItem> items;
-		long unixtime;
-		Random rng;
 
 		log.debug("entering GenerateEater");
 
-		unixtime = System.currentTimeMillis() / 1000L;
-		rng = new Random(unixtime);
 		items = wasserarmShopItems.findAll();
 
 		item = null;
@@ -202,11 +196,11 @@ public class WasserarmServiceImpl implements WasserarmService {
 		switch (diet) {
 			default:
 			case EaterDiet.NORMAL:
-				return items.get(rng.nextInt(items.size()));
+				return items.get(RNG.nextInt(items.size()));
 
 			case EaterDiet.VEGETARIAN:
 				while (true) {
-					item = items.get(rng.nextInt(items.size()));
+					item = items.get(RNG.nextInt(items.size()));
 					if (!isVegetarian(item)) {
 						continue; // YEET
 					}
@@ -215,7 +209,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 			case EaterDiet.VEGAN:
 				while (true) {
-					item = items.get(rng.nextInt(items.size()));
+					item = items.get(RNG.nextInt(items.size()));
 					if (!isVegan(item)) {
 						continue; // YEET
 					}
@@ -236,14 +230,25 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 */
 	private WasserarmShopItem[] generatePreferences(EaterDiet diet) {
 
+		WasserarmShopItem item;
 		WasserarmShopItem[] prefs;
+		HashSet<WasserarmShopItem> itemSet;
 
 		log.debug("entering GenerateEater");
 
 		prefs = new WasserarmShopItem[PREFS_SIZE];
+		itemSet = new HashSet<WasserarmShopItem>();
 
 		for(int i = 0; i <= PREFS_SIZE - 1; i++) {
-			prefs[i] = findWasserarmPrefItem(diet);
+
+			// HACK: dirty hack to prevent duplicates
+			while (true) {
+				item = findWasserarmPrefItem(diet);
+				if (itemSet.add(item)) {
+					prefs[i] = item;
+					 break;
+				}
+			}
 		}
 
 		return prefs;
