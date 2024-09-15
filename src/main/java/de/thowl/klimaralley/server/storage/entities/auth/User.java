@@ -1,9 +1,15 @@
 package de.thowl.klimaralley.server.storage.entities.auth;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGame;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -45,5 +51,17 @@ public class User {
 
 	@NotNull
 	private int waterCoins; // For wasserarm-satt
+
+	@OneToMany(mappedBy = "player") 
+    @JsonManagedReference
+    private Set<PlayerGame> playerGames; // for recycling
+
+	// public Set<PlayerGame> getPlayerGames() {
+    //     return playerGames;
+    // }
+
+    // public void setPlayerGames(Set<PlayerGame> playerGames) {
+    //     this.playerGames = playerGames;
+    // }
 
 }
