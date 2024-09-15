@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGame;
+import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGameConverter;
+import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGameDTO;
+import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGameMapper;
 import de.thowl.klimaralley.server.storage.repository.recycling.GameRepository;
 import de.thowl.klimaralley.server.storage.repository.recycling.PlayerGameRepository;
 
@@ -37,43 +40,43 @@ public class PlayerGameService {
     @Autowired
     private PlayerGameRepository playerGameRepository;
 
-    // @Autowired
-    // private PlayerGameConverter playerGameConverter; 
+    @Autowired
+    private PlayerGameConverter playerGameConverter; 
 
-    //  @Autowired
-    // private PlayerGameMapper playerGameMapper; 
+     @Autowired
+    private PlayerGameMapper playerGameMapper; 
 
-    // Konvertiert das PlayerGame-Objekt in ein DTO, wird von der Controller-Klasse aufgerufen
+    //Konvertiert das PlayerGame-Objekt in ein DTO, wird von der Controller-Klasse aufgerufen
     
-    // public List<PlayerGameDTO> getPlayerGamesByPlayerId(Long playerId) {
-    //     List<PlayerGame> playerGames = playerGameRepository.findByPlayerId(playerId);
-    //     if (playerGames == null || playerGames.isEmpty()) {
-    //         return Collections.emptyList(); // oder werfen Sie eine benutzerdefinierte Ausnahme
-    //     }
+    public List<PlayerGameDTO> getPlayerGamesByPlayerId(Long playerId) {
+        List<PlayerGame> playerGames = playerGameRepository.findByPlayerId(playerId);
+        if (playerGames == null || playerGames.isEmpty()) {
+            return Collections.emptyList(); // oder werfen Sie eine benutzerdefinierte Ausnahme
+        }
 
-    //     // Konvertieren Sie die Liste von PlayerGame in eine Liste von PlayerGameDTO
-    //     return playerGames.stream()
-    //             .map(playerGameConverter::convertToDTO)
-    //             .collect(Collectors.toList());
-    // }
+        // Konvertieren Sie die Liste von PlayerGame in eine Liste von PlayerGameDTO
+        return playerGames.stream()
+                .map(playerGameConverter::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-     // Update Methode zum Aktualisieren eines Spiels
+     //Update Methode zum Aktualisieren eines Spiels
      
-    //  public PlayerGameDTO updatePlayerGame(Long playerId, Long gameId, PlayerGameDTO playerGameDTO) {
-    //     Optional<PlayerGame> optionalPlayerGame = playerGameRepository.findByPlayerIdAndGameId(playerId, gameId);
+     public PlayerGameDTO updatePlayerGame(Long playerId, Long gameId, PlayerGameDTO playerGameDTO) {
+        Optional<PlayerGame> optionalPlayerGame = playerGameRepository.findByPlayerIdAndGameId(playerId, gameId);
         
-    //     if (optionalPlayerGame.isPresent()) {
-    //         PlayerGame playerGame = optionalPlayerGame.get();
-    //         playerGame.setPoints(playerGameDTO.getPoints());
-    //         playerGame.setIsCompleted(playerGameDTO.getIsCompleted());
-    //         playerGame.setIsSuccessful(playerGameDTO.getIsSuccessful());
+        if (optionalPlayerGame.isPresent()) {
+            PlayerGame playerGame = optionalPlayerGame.get();
+            playerGame.setPoints(playerGameDTO.getPoints());
+            playerGame.setIsCompleted(playerGameDTO.getIsCompleted());
+            playerGame.setIsSuccessful(playerGameDTO.getIsSuccessful());
 
-    //         PlayerGame updatedGame = playerGameRepository.save(playerGame);
-    //         return playerGameMapper.toDTO(updatedGame);
-    //     } else {
-    //         return null;  // Spiel nicht gefunden
-    //     }
-    // }  
+            PlayerGame updatedGame = playerGameRepository.save(playerGame);
+            return playerGameMapper.toDTO(updatedGame);
+        } else {
+            return null;  // Spiel nicht gefunden
+        }
+    }  
 
     public List<PlayerGame> getAllPlayerGames() {
         return playerGameRepository.findAll();
@@ -100,6 +103,8 @@ public class PlayerGameService {
     // }
 
     // Methode zum Abrufen der game_id
+    
+    
     public Long getGameIdFromPlayerGame(Long id) {
         return playerGameRepository.findById(id)
             .map(playerGame -> playerGame.getGame().getId())
