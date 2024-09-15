@@ -20,7 +20,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * A Representation of a User (player).
  *
- * @author Jonas Schwind
+ * @author Jonas Schwind (Main Author)
+ * @author Jeffrey Böttcher (Minor Author)
  * @version 1.0.0
  */
 @Data
@@ -56,12 +57,5 @@ public class User {
     @JsonManagedReference
     private Set<PlayerGame> playerGames; // for recycling
 
-	// public Set<PlayerGame> getPlayerGames() {
-    //     return playerGames;
-    // }
-
-    // public void setPlayerGames(Set<PlayerGame> playerGames) {
-    //     this.playerGames = playerGames;
-    // }
 
 }

@@ -11,6 +11,12 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+/**
+ * A Representation of a Game.
+ * @author Jeffrey Böttcher (Main Author)
+ * @version 1.0.0
+ */
+
 @Entity
 public class Game {
     
@@ -21,8 +27,8 @@ public class Game {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "game")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "game") //ein Spiel kann mehrere Playergames beinhalten. Game Quiz kann von mehreren Usern gespielt werden und somit gibt es mehrere Spiele für die spezifischen PLAYER
+    @JsonManagedReference //verhindert eine Endlosschleife und bestimmt die verwaltende Seite der Beziehung
     private Set<PlayerGame> playerGames;
 
     // Parameterloser Konstruktor

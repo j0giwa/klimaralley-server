@@ -11,6 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+
+
+/**
+ * A Representation of a PlayerGameGame.
+ * @author Jeffrey Böttcher (Main Author)
+ * @version 1.0.0
+ */
 @Entity
 public class PlayerGame {
 
@@ -19,15 +26,16 @@ public class PlayerGame {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "user_id", nullable = false) // Fremdschlüssel  
+    @JsonBackReference //verhindert dass die User- und Game-Beziehungen rekursiv in JSON eingebettet werden.
     private User player;
 
     @ManyToOne
-    @JoinColumn(name = "game_id", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "game_id", nullable = false) // Fremdschlüssel 
+    @JsonBackReference  
     private Game game;
 
+    //wichtige Daten für die Spielergebnisse und Speicherung der Datenbank
     @Column(nullable = true)
     private Integer points;
 
