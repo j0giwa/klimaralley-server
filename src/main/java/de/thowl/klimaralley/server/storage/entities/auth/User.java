@@ -1,15 +1,9 @@
 package de.thowl.klimaralley.server.storage.entities.auth;
 
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import de.thowl.klimaralley.server.storage.entities.recycling.PlayerGame;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,7 +15,6 @@ import lombok.RequiredArgsConstructor;
  * A Representation of a User (player).
  *
  * @author Jonas Schwind (Main Author)
- * @author Jeffrey Böttcher (Minor Author)
  * @version 1.0.0
  */
 @Data
@@ -53,9 +46,6 @@ public class User {
 	@NotNull
 	private int waterCoins; // For wasserarm-satt
 
-	@OneToMany(mappedBy = "player") 
-    @JsonManagedReference
-    private Set<PlayerGame> playerGames; // for recycling
 
 
 }
