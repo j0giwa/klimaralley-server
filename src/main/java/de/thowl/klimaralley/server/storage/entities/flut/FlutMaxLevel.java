@@ -5,15 +5,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+/*****
+ * A class to save the Integer value of the maximal reached level
+ * 
+ * @author Cedric Bourgeois
+ * @version 1.0.0
+ */
 @Entity
+@Table(name = "flut_game")
 public class FlutMaxLevel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId; // NEU: userId zur Verknüpfung mit dem Benutzer
+    private Long userId; 
     private Integer value;
 
     // Getter und Setter
