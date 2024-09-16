@@ -19,7 +19,7 @@ public class CorsConfig {
         ArrayList<String> origins = new ArrayList<>();
 
         // TODO: replace with server url
-        origins.addAll(List.of("http://localhost", "http://192.168.178.35"));
+        origins.addAll(List.of("http://localhost", "http://vmklimarallye.aes.th-owl.de"));
 
         config.setAllowCredentials(true);
         config.setAllowedOrigins(origins);
