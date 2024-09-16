@@ -22,7 +22,7 @@ def test_water_eater_endpoint():
     
     response = requests.get(url, headers=headers)
     response_text = response.text
-    expected = r"\{\s*\"id\":\s*\d+,\s*\"name\":\s*\"[A-Za-zÅÄÖÜåäöü\s]+\",\s*\"diet\":\s*\"[A-Z_\s]+\",\s*\"preferernces\":\s*\[\s*(\{\s*\"id\":\s*\d+,\s*\"name\":\s*\"[A-Za-zÅÄÖÜåäöü\s]+\",\s*\"type\":\s*\"[A-Z_]+\",\s*\"water\":\s*\d+,\s*\"price\":\s*\d+\s*\}\s*,?\s*)*\]\s*}"
+    expected = r"\{\s*\"id\":\s*\d+,\s*\"name\":\s*\"[A-Za-zÅÄÖÜåäöü\s]+\",\s*\"diet\":\s*\"[A-Z_\s]+\",\s*\"preferernces\":\s*\[\s*(\{\s*\"id\":\s*\d+,\s*\"name\":\s*\"[A-Za-zÅÄÖÜåäöü\s]+\",\s*\"type\":\s*\"[A-Z_]+\",\s*\"water\":\s*\d+,\s*\"price\":\s*\d+\s*,\s*\"icon\":\s*\"(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)\"\s*\}\s*,?\s*)*\]\s*}"
     
     assert re.match(expected, response_text, re.MULTILINE), "Response does not match the expected pattern"
 
