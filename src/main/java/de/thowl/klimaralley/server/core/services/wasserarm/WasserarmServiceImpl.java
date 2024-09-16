@@ -382,11 +382,17 @@ public class WasserarmServiceImpl implements WasserarmService {
 			totalPrice += item.getPrice();
 		}
 
-		score = 500; //INFO: Free points, because havo none is depressing
+		score = 1500; //INFO: Free points, because havo none is depressing
 		double epsilon = 1e-6; // HACK: Tiny constant to prevent division by zero
 		double calculation = (variety / 5.0) * (playerWater / (matchedPrefs + epsilon)) * Math.log((playerCoins - totalPrice) + 1);
 		score += (int) Math.round(calculation);
 
-		return Integer.parseUnsignedInt(score); // Treat as unsigned, wtf java
+		if (score <= 0) {
+			score = 1500; //INFO: Free points, because havo none is depressing
+		}
+
+		this.eaters.delete(eater);
+
+		return score;
 	}
 }
