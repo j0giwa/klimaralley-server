@@ -1,6 +1,5 @@
 package de.thowl.klimaralley.server.storage.repository.flut;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.stereotype.Repository;
 

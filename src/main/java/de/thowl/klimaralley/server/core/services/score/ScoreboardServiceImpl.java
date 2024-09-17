@@ -1,5 +1,7 @@
 package de.thowl.klimaralley.server.core.services.score;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 	@Autowired
 	private UserRepository users;
 
+	@Autowired
+	private ScoreBoardRepository scoreBoardEntry;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -41,6 +46,13 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 		entry = new ScoreBoardEntry(user, score, game);
 
 		this.scoreboard.save(entry);
+	}
+
+	public List<ScoreBoardEntry> getAllByGame(Game game) {
+
+		log.debug("entering findAllByGame");
+
+		return this.scoreBoardEntry.findAllByGameOrderByScoreDesc(game);
 	}
 
 }

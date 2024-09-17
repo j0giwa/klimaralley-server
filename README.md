@@ -39,7 +39,7 @@ java -jar target/klimaralley.server-0.0.1-SNAPSHOT.jar
 
 ## API Documentation
 The API documentation is generated using [Swagger](https://swagger.io). 
-To view the documentation, start the server and navigate to [Swagger UI (http://localhost:8080/docs)](http://localhost:8080/docs).
+To view the documentation, start the server and navigate to [Swagger UI (http://localhost:8080/swagger-ui/index.html)](http://localhost:8080/swagger-ui/index.html).
 
 ## Testing
 Testing is automated via github actions.

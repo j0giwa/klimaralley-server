@@ -9,6 +9,6 @@ import de.thowl.klimaralley.server.storage.entities.score.ScoreBoardEntry;
 
 public interface ScoreBoardRepository extends CrudRepository<ScoreBoardEntry, Long> {
 
-	public List<ScoreBoardEntry> findAllByGame(Game game);
+	public List<ScoreBoardEntry> findAllByGameOrderByScoreDesc(Game game);
 	
 }
