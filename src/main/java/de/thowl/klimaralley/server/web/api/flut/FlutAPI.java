@@ -31,8 +31,9 @@ import org.springframework.web.bind.annotation.*;
  * @author Cedric Bourgeois
  * @version 1.0.0
  */
+
 @RestController
-@RequestMapping("/api/flut")
+@RequestMapping("play/flut/api")
 public class FlutAPI {
 
     @Autowired
@@ -55,8 +56,11 @@ public class FlutAPI {
      * @param request An object containing the user ID and the flood level value.
      * @return The saved FlutMaxLevel object.
      */
+    
+    
     @PostMapping
     public FlutMaxLevel saveFlutMaxLevel(@RequestBody FlutRequest request) {
+        
         return flutService.saveFlutMaxLevel(request.getUserId(), request.getValue());
     }
 
