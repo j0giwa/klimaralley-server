@@ -21,6 +21,7 @@ import de.thowl.klimaralley.server.storage.entities.wasserarm.Eater;
 import de.thowl.klimaralley.server.storage.entities.wasserarm.WasserarmShopItem;
 import de.thowl.klimaralley.server.web.schema.util.ResponseBody;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameSubmission;
+import de.thowl.klimaralley.server.web.schema.wasserarm.CoinResponse;
 import de.thowl.klimaralley.server.web.schema.wasserarm.GameScoreResponse;
 import de.thowl.klimaralley.server.web.schema.wasserarm.WaterResponse;
 
@@ -326,8 +327,8 @@ public class WasserAPI {
 				responseCode = "200",
 				description = "Water ammount ",
 				content = @Content(
-					schema = @Schema(implementation = WaterResponse.class),
-					examples = @ExampleObject(value = "{ 'message': 'Here comes the money', 'waterCoins': 500 }"))),
+					schema = @Schema(implementation = CoinResponse.class),
+					examples = @ExampleObject(value = "{ 'message': 'Retrieved coin ammount', 'coins': 500 }"))),
 			@ApiResponse(
 				responseCode = "401",
 				description = "User not authentificated",
@@ -338,7 +339,7 @@ public class WasserAPI {
 		security = @SecurityRequirement(name = "bearerAuth")
 	)
 	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Object> setWater(
+	public ResponseEntity<Object> getCoins(
 		@Parameter(hidden = true)
 		@RequestHeader(name = "Authorization", required = false)
 		String token
@@ -348,7 +349,7 @@ public class WasserAPI {
 		Claims claims;
 		ResponseBody body;
 
-		log.info("entering getScore (PATCH-Method: /water/water)");
+		log.info("entering getCoins (GET-Method: /water/coins)");
 
 		body = new ResponseBody();
 		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
@@ -356,17 +357,17 @@ public class WasserAPI {
 		if (this.authsvc.isValid(token)) {
 			log.info("Authenticated user ID: {}", claims.getSubject());
 			long userId = Long.parseLong(claims.getSubject());
-			coins = this.wassersvc.getWater(userId);
+			coins = this.wassersvc.getCoins(userId);
 		} else {
-			log.error("Unauthorised call of PATCH-Method: /water/water");
+			log.error("Unauthorised call of GET-Method: /water/coins");
 			body = new ResponseBody();
 			body.setMessage("Authorisation token needed, get one from /auth/login");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+			//return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
 		}
 
-		body = new WaterResponse();
-		body.setMessage("Increased water ammount");
-		((WaterResponse) body).setWater(coins);
+		body = new CoinResponse();
+		body.setMessage("Retrieved coin ammount");
+		((CoinResponse) body).setCoins(coins);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 
