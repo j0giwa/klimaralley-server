@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;
 import java.util.Date;
@@ -17,6 +18,7 @@ import de.thowl.klimaralley.server.storage.entities.auth.User;
  * @author Jonas Schwind
  * @version 1.2.0
  */
+@Slf4j
 public class Tokenizer {
 
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -58,9 +60,14 @@ public class Tokenizer {
 				.parseClaimsJws(token)
 				.getBody();
 		} catch (JwtException e) {
-			// Handle other JwtExceptions (e.g., expired token, invalid signature)
-			throw new RuntimeException("Invalid token", e);
-		}
+			log.error("Invalid token: {}", token);
+		} catch (SecurityException e) {
+			log.error("Invalid JWT signature for token: {}", token);
+    		} catch (Exception e) {
+        		log.error("We dont know what went wrong :(");
+    		}
+
+		return null;
 	}
 
 	/**
