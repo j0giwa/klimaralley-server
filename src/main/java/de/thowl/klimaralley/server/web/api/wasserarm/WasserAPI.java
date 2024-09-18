@@ -164,6 +164,48 @@ public class WasserAPI {
 	}
 
 	/**
+	 * Get coin amount of given user
+	 *
+	 * NOTE: The swagger ui generates a wrong curl, call with:
+	 * curl -X 'POST' \
+	 * 'localhost:8080/water/water?Amount=500' \
+	 * -H 'accept text/plain'
+	 * -H 'Authorization: Bearer <TOKEN>'
+	 *
+	 * @return repsonse (code {@code 200}) with the coin amount
+	 */
+	@Operation(summary = "Get coin amount of user", responses = {
+			@ApiResponse(responseCode = "200", description = "Water ammount ", content = @Content(schema = @Schema(implementation = CoinResponse.class), examples = @ExampleObject(value = "{ 'message': 'Retrieved coin ammount', 'coins': 500 }"))),
+			@ApiResponse(responseCode = "401", description = "User not authentificated", content = @Content(schema = @Schema(implementation = ResponseBody.class), examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
+	}, security = @SecurityRequirement(name = "bearerAuth"))
+	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Object> getCoins(
+			@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token) {
+
+		int coins = 0;
+		Claims claims;
+		ResponseBody body;
+
+		log.info("entering getCoins (GET-Method: /water/coins)");
+
+		body = new ResponseBody();
+		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
+
+		if (this.authsvc.isValid(token)) {
+			log.info("Authenticated user ID: {}", claims.getSubject());
+			long userId = Long.parseLong(claims.getSubject());
+			coins = this.wassersvc.getCoins(userId);
+		} else {
+			coins = 5000;
+		}
+
+		body = new CoinResponse();
+		body.setMessage("Retrieved coin ammount");
+		((CoinResponse) body).setCoins(coins);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
+	}
+
+	/**
 	 * Increase water of given user
 	 *
 	 * NOTE: The swagger ui generates a wrong curl, call with:
@@ -306,68 +348,6 @@ public class WasserAPI {
 		body = new GameScoreResponse();
 		body.setMessage("Good job");
 		((GameScoreResponse) body).setScore(score);;
-		return ResponseEntity.status(HttpStatus.OK).body(body);
-	}
-
-	/**
-	 * Get coin amount of given user
-	 *
-	 * NOTE: The swagger ui generates a wrong curl, call with:
-	 * curl -X 'POST' \
-	 *   'localhost:8080/water/water?Amount=500' \
-	 *   -H 'accept text/plain'
-	 *   -H 'Authorization: Bearer <TOKEN>'
-	 *
-	 * @return repsonse (code {@code 200}) with the coin amount
-	 */
-	@Operation(
-		summary = "Get coin amount of user (Authentification required)",
-		responses = {
-			@ApiResponse(
-				responseCode = "200",
-				description = "Water ammount ",
-				content = @Content(
-					schema = @Schema(implementation = CoinResponse.class),
-					examples = @ExampleObject(value = "{ 'message': 'Retrieved coin ammount', 'coins': 500 }"))),
-			@ApiResponse(
-				responseCode = "401",
-				description = "User not authentificated",
-				content = @Content(
-					schema = @Schema(implementation = ResponseBody.class),
-					examples = @ExampleObject(value = "{ 'message': 'Authorisation token needed, get one from /auth/login' }"))),
-		},
-		security = @SecurityRequirement(name = "bearerAuth")
-	)
-	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Object> getCoins(
-		@Parameter(hidden = true)
-		@RequestHeader(name = "Authorization", required = false)
-		String token
-	) {
-
-		int coins = 0;
-		Claims claims;
-		ResponseBody body;
-
-		log.info("entering getCoins (GET-Method: /water/coins)");
-
-		body = new ResponseBody();
-		claims = Tokenizer.parseToken(Tokenizer.getBearer(token));
-
-		if (this.authsvc.isValid(token)) {
-			log.info("Authenticated user ID: {}", claims.getSubject());
-			long userId = Long.parseLong(claims.getSubject());
-			coins = this.wassersvc.getCoins(userId);
-		} else {
-			log.error("Unauthorised call of GET-Method: /water/coins");
-			body = new ResponseBody();
-			body.setMessage("Authorisation token needed, get one from /auth/login");
-			//return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
-		}
-
-		body = new CoinResponse();
-		body.setMessage("Retrieved coin ammount");
-		((CoinResponse) body).setCoins(coins);
 		return ResponseEntity.status(HttpStatus.OK).body(body);
 	}
 

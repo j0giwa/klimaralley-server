@@ -76,7 +76,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 	/**
 	 * {@inheritDoc}
-     */
+	*/
 	public List<WasserarmShopItem> getAll() {
 
 		log.debug("entering getAll");
@@ -258,7 +258,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 	 * {@inheritDoc}
 	 */
 	@Override
-    public Eater generateEater() {
+	public Eater generateEater() {
 
 		Eater eater;
 		EaterDiet diet;
@@ -343,7 +343,7 @@ public class WasserarmServiceImpl implements WasserarmService {
 
 		user = this.users.findById(id).get();
 
-		return user.getWater();
+		return user.getWaterCoins();
 	}
 
 	/**
