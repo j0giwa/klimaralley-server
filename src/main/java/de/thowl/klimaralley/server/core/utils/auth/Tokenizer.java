@@ -59,10 +59,10 @@ public class Tokenizer {
 				.build()
 				.parseClaimsJws(token)
 				.getBody();
-		} catch (JwtException e) {
-			log.error("Invalid token: {}", token);
 		} catch (SecurityException e) {
 			log.error("Invalid JWT signature for token: {}", token);
+		} catch (JwtException e) {
+			log.error("Invalid token: {}", token);
     		} catch (Exception e) {
         		log.error("We dont know what went wrong :(");
     		}
