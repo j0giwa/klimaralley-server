@@ -180,7 +180,10 @@ public class WasserAPI {
 	}, security = @SecurityRequirement(name = "bearerAuth"))
 	@RequestMapping(value = "/coins", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Object> getCoins(
-			@Parameter(hidden = true) @RequestHeader(name = "Authorization", required = false) String token) {
+		@Parameter(hidden = true)
+		@RequestHeader(name = "Authorization", required = false)
+		String token
+	) {
 
 		int coins = 0;
 		Claims claims;
